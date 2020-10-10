@@ -1,45 +1,39 @@
 function Juego(){
-	this.partidas={};//que coleccion?
+	this.partidas={};
 	this.crearPartida=function(num,owner){
 		let codigo=this.obtenerCodigo();
 		if (!this.partidas[codigo]){
-			this.partidas[codigo]=new Partida(num,owner);
+			this.partidas[codigo]=new Partida(num,owner.nick);
 			owner.partida=this.partidas[codigo];
 		}
 	}
 	this.unirAPartida=function(codigo,nick){
-		if (this.partidas[codigo] && this.faltan(codigo)){
+		if (this.partidas[codigo]){
 			this.partidas[codigo].agregarUsuario(nick);
 		}
 	}
-	this.faltan=function(codigo){
-		return Object.keys(juego.partidas[codigo].usuarios).length;
-	}
-
-	}
+	
 	this.obtenerCodigo=function(){
 		let cadena="ABCDEFGHIJKLMNOPQRSTUVXYZ";
 		let letras=cadena.split('');
 		let maxCadena=cadena.length;
 		let codigo=[];
 		for(i=0;i<6;i++){
-			codigo.push(letras[randomInt(1,25)-1]);
+			codigo.push(letras[randomInt(1,maxCadena)-1]);
 		}
 		return codigo.join('');
 	}
-
+}
 
 function Partida(num,owner){
 	this.maximo=num;
 	this.nickOwner=owner;
 	this.fase=new Inicial();
-	
-	this.usuarios={};//el index 0 será el owner
-	//this.usuarios={} //versión array asociativo
+	this.usuarios={};
 	this.agregarUsuario=function(nick){
-		this.fase.agregarUsuario
-		//comprobar nick unico
-		//comprobar si maximo
+		this.fase.agregarUsuario(nick,this)
+	}
+	this.puedeAgregarUsuario=function(nick){
 		let nuevo=nick;
 		let contador=1;
 		while(this.usuarios[nuevo]){
@@ -52,40 +46,46 @@ function Partida(num,owner){
 		}
 	}
 	this.iniciarPartida=function(){
-			this.fase.iniciarPartida(this);
+		this.fase.iniciarPartida(this);
 	}
-	this.agregarUsuario(owner); //lo usa el que crea la partida
+	this.agregarUsuario(owner);
 }
 
 function Inicial(){
 	this.agregarUsuario=function(nick,partida){
-		partida.puedeAgregarUsuario(nick);
+		partida.puedeAgregarUsuario(nick);		
 	}
 	this.iniciarPartida=function(partida){
-		console.
+		console.log("Faltan jugadores");
 	}
 }
 
 function Completado(){
-		this.iniciarPartida=function(partida){
-			partida.fase=new Jugando();
-		}
-}
-function Jugando(){
-
-	this.agregarUsuario=function(nick,partida){
-		console.log(" La partida ya ha comenzado");
-}
-function Final(){
-
-	this.agregarUsuario=function(nick,partida){
-		console.log(" La partida ya ha terminado");
+	this.iniciarPartida=function(partida){
+		partida.fase=new Jugando();
 	}
-	//
+	this.agregarUsuario=function(nick,partida){
+		console.log("La partida ya ha comenzado");
+	}
 }
 
+function Jugando(){
+	this.agregarUsuario=function(nick,partida){
+		console.log("La partida ya ha comenzado");
+	}
+	this.iniciarPartida=function(partida){
+	}
+}
 
-function Usuario(nick, juego){
+function Final(){
+	this.agregarUsuario=function(nick,partida){
+		console.log("La partida ha terminado");
+	}
+	this.iniciarPartida=function(partida){
+	}
+}
+
+function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego=juego;
 	this.partida;
@@ -94,13 +94,9 @@ function Usuario(nick, juego){
 	}
 	this.iniciarPartida=function(){
 		this.partida.iniciarPartida();
-
 	}
 }
 
-
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low) + low);
-}
-
 }
