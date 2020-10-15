@@ -42,15 +42,14 @@ function Partida(num,owner){
 			contador=contador+1;
 		}
 		this.usuarios[nuevo]=new Usuario(nuevo);
-		this.comprobarMinimo();
-		}
-		this.comprobarMinimo=function(){
-			return Object.keys(this.usuario).length>=4{
-				this.fase=new Completado();
-
-		}	
+		//this.comprobarMinimo();
 	}
-
+	this.comprobarMinimo=function(){
+		return Object.keys(this.usuarios).length>=4
+	}
+	this.comprobarMaximo=function(){
+		return Object.keys(this.usuarios).length<this.maximo
+	}
 	this.iniciarPartida=function(){
 		this.fase.iniciarPartida(this);
 	}
@@ -67,7 +66,9 @@ function Inicial(){
 	this.nombre="inicial";
 	this.agregarUsuario=function(nick,partida){
 		partida.puedeAgregarUsuario(nick);
-				
+		if (partida.comprobarMinimo()){
+			partida.fase=new Completado();
+		}		
 	}
 	this.iniciarPartida=function(partida){
 		console.log("Faltan jugadores");
@@ -84,20 +85,23 @@ function Completado(){
 		partida.fase=new Jugando();
 	}
 	this.agregarUsuario=function(nick,partida){
-		console.log("La partida ya ha comenzado");
+		if (partida.comprobarMaximo()){
+			partida.puedeAgregarUsuario(nick);
+		}
+		else{
+			console.log("Lo siento, numero máximo")
+		}
 	}
 	this.abandonarPartida=function(nick,partida){
 		partida.eliminarUsuario(nick);
-		if(partida.comprobarMinimo()){
+		if (!partida.comprobarMinimo()){
 			partida.fase=new Inicial();
 		}
-		//compobar el numero usuarios
-		//partida.fase=new Inicial();
 	}
 }
 
 function Jugando(){
-		this.nombre="jugando";
+	this.nombre="jugando";
 	this.agregarUsuario=function(nick,partida){
 		console.log("La partida ya ha comenzado");
 	}
@@ -105,19 +109,19 @@ function Jugando(){
 	}
 	this.abandonarPartida=function(nick,partida){
 		partida.eliminarUsuario(nick);
-		//comprobar si termina la 
+		//comprobar si termina la partida
 	}
 }
 
 function Final(){
-	this.nombre="final";
+	this.final="final";
 	this.agregarUsuario=function(nick,partida){
 		console.log("La partida ha terminado");
 	}
 	this.iniciarPartida=function(partida){
 	}
 	this.abandonarPartida=function(nick,partida){
-		// esto es absurdo
+		//esto es absurdo
 	}
 }
 
@@ -131,7 +135,9 @@ function Usuario(nick,juego){
 	this.iniciarPartida=function(){
 		this.partida.iniciarPartida();
 	}
-	//this.abandonar.
+	this.abandonarPartida=function(){
+		this.partida.abandonarPartida(this.nick);
+	}
 }
 
 function randomInt(low, high) {
