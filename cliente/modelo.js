@@ -1,6 +1,7 @@
 function Juego(){
 	this.partidas={};
 	this.crearPartida=function(num,owner){
+		//compronbar limites de num 
 		let codigo=this.obtenerCodigo();
 		if (!this.partidas[codigo]){
 			this.partidas[codigo]=new Partida(num,owner.nick);
@@ -82,6 +83,10 @@ function Inicial(){
 function Completado(){
 	this.nombre="completado";
 	this.iniciarPartida=function(partida){
+		//llame puedeIniciarPartida();
+		//partida.fase=new Jugando();
+		//asignar encargos: jardines calles mobiliario basura Secuencialmente a todos los usuarios
+		//asignar impostor: dado el array(Object.keys)
 		partida.fase=new Jugando();
 	}
 	this.agregarUsuario=function(nick,partida){
@@ -129,6 +134,8 @@ function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego=juego;
 	this.partida;
+	this.impostor=false;
+	//this.encargos=;
 	this.crearPartida=function(num){
 		return this.juego.crearPartida(num,this);
 	}
@@ -142,4 +149,20 @@ function Usuario(nick,juego){
 
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low) + low);
+}
+
+function inicio(){
+
+	juego=new Juego();
+	var usr=new Usuario("pepe",juego);
+	var codigo=usr.crearPartida(4);
+
+	juego.unirAPartida(codigo,"luis");
+	juego.unirAPartida(codigo,"luisita");
+	juego.unirAPartida(codigo,"luisito");
+	juego.unirAPartida(codigo,"pepe2");
+
+	usr.iniciarPartida(); 
+
+
 }
