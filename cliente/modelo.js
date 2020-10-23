@@ -1,3 +1,6 @@
+
+
+///////////////////FUNCION JUEGO ////////////
 function Juego(){
 	this.partidas={};
 	this.crearPartida=function(num,owner){
@@ -40,6 +43,7 @@ function Juego(){
 	}
 }
 
+///////////////////FUNCION PARTIDAS ////////////
 function Partida(num,owner){
 	this.maximo=num;
 	this.nickOwner=owner;
@@ -186,6 +190,9 @@ this.comprobarFinal=function(){
 
 }
 
+
+///////////////////FUNCION INICIAL ////////////
+
 function Inicial(){
 	this.nombre="inicial";
 	this.agregarUsuario=function(nick,partida){
@@ -204,11 +211,12 @@ function Inicial(){
 	}
 }
 
+
+///////////////////FUNCION COMPLETADO ////////////
 function Completado(){
 	this.nombre="completado";
 	this.iniciarPartida=function(partida){
 		partida.puedeIniciarPartida();
-		//partida.fase=new Jugando();
 		//asignar encargos: jardines calles mobiliario basura Secuencialmente a todos los usuarios
 		//asignar impostor: dado el array(Object.keys)
 		partida.fase=new Jugando();
@@ -231,6 +239,7 @@ function Completado(){
 	}
 }
 
+///////////////////FUNCION JUGANDO ////////////
 function Jugando(){
 	this.nombre="jugando";
 	this.agregarUsuario=function(nick,partida){
@@ -248,11 +257,14 @@ function Jugando(){
 	
 }
 
+///////////////////FUNCION VOTACION ////////////
 function Votacion(){
 
 }
 
 
+
+///////////////////FUNCION FIN ////////////
 function Final(){
 	this.final="final";
 	this.agregarUsuario=function(nick,partida){
@@ -267,6 +279,8 @@ function Final(){
 	}
 }
 
+
+///////////////////FUNCION USUARIO ////////////
 function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego=juego;
@@ -306,6 +320,9 @@ function Usuario(nick,juego){
 
 }
 
+
+
+///////////////////FUNCION VIVO ////////////
 function Vivo(){
 	this.nombre="vivo";
 	this.atacar=function(nick,partida){
@@ -316,6 +333,9 @@ function Vivo(){
 	}
 }
 
+
+
+///////////////////FUNCION MUERTO ////////////
 function Muerto(){
 	this.nombre="muerto";
 	this.atacar=function(nick,partida){
