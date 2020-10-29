@@ -1,7 +1,7 @@
 
 
 ///////////////////FUNCION JUEGO ////////////
- function Juego(){
+function Juego(){
 	this.partidas={};
 	this.crearPartida=function(num,owner){
 		
@@ -19,10 +19,11 @@
 
 }
 this.unirAPartida=function(codigo,nick){
+	var res=-1;
 	if (this.partidas[codigo]){
-		this.partidas[codigo].agregarUsuario(nick);
+		res=this.partidas[codigo].agregarUsuario(nick);
 	}
-	return this.partidas[codigo];
+	return res;
 }
 
 this.eliminarPartida=function(cod){
@@ -482,7 +483,7 @@ function numeroValido(num) {
 	}
 }
 
-function inicio(){
+/*function inicio(){
 
 	juego=new Juego();
 	var usr=new Usuario("pepe",juego);
@@ -496,4 +497,8 @@ function inicio(){
 		usr.iniciarPartida(); 
 	}
 
-}
+}*/
+//esto de abajo solo hace falta en el modelo js del servidor
+
+module.exports.Juego=Juego;
+module.exports.Usuario=Usuario;
