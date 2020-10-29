@@ -42,6 +42,20 @@ this.obtenerCodigo=function(){
 	}
 	return codigo.join('');
 }
+
+this.listaPartidas=function(){
+	var lista=[];
+	var huecos=0;
+	for(var key in this.partidas){
+		var partida=this.partidas[key];
+		huecos=partida.obtenerHuecos();
+		if (huecos >0 ){//&& !(partida.fase.nombre=="jugando")){
+			
+		lista.push({"codigo":key,"huecos":num});
+		
+		}
+	}
+	return lista;
 }
 
 ///////////////////FUNCION PARTIDAS ////////////
@@ -64,6 +78,10 @@ function Partida(num,owner,codigo){
 		}
 		this.usuarios[nuevo]=new Usuario(nuevo);
 		this.usuarios[nuevo].partida = this;
+	}
+
+	this.obtenerHuecos=function(){
+		return this.maximo-this.numJugadores();
 	}
 	this.numJugadores=function(){
 		return Object.keys(this.usuarios).length

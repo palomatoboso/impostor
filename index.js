@@ -47,6 +47,10 @@ var res=juego.unirAPartida(codigo,nick);
 response.send({"res":res}); 
 });
 
+app.get("/listaPartidas",function(request,response){
+	var lista=juego.listaPartidas();
+	response.send(lista);
+})
 
 
 server.listen(app.get('port'), function () {
