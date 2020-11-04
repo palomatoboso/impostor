@@ -1,10 +1,14 @@
 //DEBE ESTAR GUARDADO EN :   cliente/ src 
 
 function ClienteRest(){
-	this.crearPartida=function(nick){
+
+	this.crearPartida=function(nick,num,callback){
 		$.getJSON("/crearPartida/"+nick+"/"+num,function(data){    
     		console.log(data);
+    		callback(data);
+    		//parar ruleta
 		});
+		//ruleta
 	}
 
 	this.unirAPartida=function(codigo, nick){
