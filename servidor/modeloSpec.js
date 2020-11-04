@@ -120,15 +120,136 @@ describe("El juego del impostor", function() {
           expect(partida.fase.nombre=="jugando").toBe(true);
           partida.usuarios["paloma"].abandonarPartida();
           expect(Object.keys(partida.usuarios).length==3).toBe(true);
-          partida.usuarios["tomas"].abandonarPartida();
+          partida.usuarios["luisita"].abandonarPartida();
           expect(partida.fase.nombre=="inicial").toBe(true);
           expect(Object.keys(partida.usuarios).length==2).toBe(true);
-          partida.usuarios["joselito"].abandonarPartida();
+          partida.usuarios["amelia"].abandonarPartida();
           partida.usuarios["pepepitollo"].abandonarPartida();
           expect(partida.numJugadores()).toEqual(0);
           juego.eliminarPartida(codigo);
           expect(juego.partidas[codigo]).toBe(undefined);
         });
+
+
+       
+    
+          it("Comprobar de que tenemos un impostor", function() {​​​​​
+          expect(numImpostores).not.toEqual(0);
+          }​​​​​);
+
+           it("Partida que ganan por los impostores", function() {​​​​​
+          expect(partida.usuarios["pepe"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["paloma"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["luisita"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["amelia"].estado.nombre).toEqual("vivo");
+          impostor = partida.asignarImpostor();
+          impostor.atacar("pepe");
+          impostor.atacar("paloma");
+          impostor.atacar("luisita");
+          impostor.atacar("amelia");
+          expect(partida.fase.nombre).toEqual("final");
+          expect(partida.fase.ganadores).toEqual("impostores");
+          }​​​​​);
+           it("La partida la ganan los impostores", function() {​​​​​
+          expect(partida.usuarios["pepe"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["paloma"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["luisita"].estado.nombre).toEqual("vivo");
+          expect(partida.usuarios["amelia"].estado.nombre).toEqual("vivo");
+          impostor = partida.identificarImpostor();
+          impostor.atacar("pepe");
+          impostor.atacar("paloma");
+          impostor.atacar("luisita");
+          impostor.atacar("amelia");
+          expect(partida.fase.nombre).toEqual("final");
+          expect(partida.fase.ganadores).toEqual("impostores");
+          }​​​​​);
+           it("Mueren  ciudadanos", function() {​​​​​
+          expect(partida.usuarios["pepe"].estado.nombre).toEqual("vivo");
+          impostor.atacar(ciudadanos[0].nick);
+          expect(partida.usuarios[ciudadanos[0].nick].estado.nombre).toEqual("muerto");
+          }​​​​​);
+          ​
+              
+          it("Mientras estamos jugando la partida", function(){​​​​​
+          beforeEach(function() {​​​​​
+          juego.unirAPartida(codigo, "paloma");
+          juego.unirAPartida(codigo, "luisita");
+          juego.unirAPartida(codigo, "amelia");
+          usr.iniciarPartida();
+          usuarios = partida.codigo.usuarios;
+          numImpostores = partida.numImpostoresVivos();
+          impostor = partida.asignarImpostor();
+          ciudadanos = partida.cuantosCiudadanosVivos();
+          }​​​​​);
+            it ( "votaciones: no votan por lo que no mueren y siguen jugando" ,  function ( )  {
+          esperar ( partida . fase . nombre ) . toEqual ( "jugando" ) ;
+          esperar ( partida . usuarios [ "pepe" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "paloma" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "luisita" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "amelia" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          partida . comenzarVotacion ( ) ;
+          esperar ( partida . fase . nombre ) . toEqual ( "votacion" ) ;
+          partida . usuarios [ "pepe" ] . skipear ( ) ;
+          esperar ( partida . usuarios [ "pepe" ] . saltar ) . toBe ( verdadero ) ;
+          partida . usuarios [ "paloma" ] . skipear ( ) ;
+          esperar ( partida . usuarios [ "paloma" ] . saltar ) . toBe ( verdadero ) ;
+          partida . usuarios [ "luisita" ] . skipear ( ) ;
+          esperar ( partida . usuarios [ "luisita" ] . saltar ) . toBe ( verdadero ) ;
+          partida . usuarios [ "amelia" ] . skipear ( ) ;
+          esperar ( partida . usuarios [ "amelia" ] . saltar ) . toBe ( verdadero ) ;
+          esperar ( partida . numImpostoresVivos ( ) ) . toEqual ( 1 ) ;
+          esperar ( partida . numCiudadanosVivos ( ) ) . toEqual ( 3 ) ;
+          esperar ( partida . gananCiudadanos ( ) ) . toBe ( falso ) ;
+          esperar ( partida . gananImpostores ( ) ) . toBe ( falso ) ;
+          partida . eliminarMasVotado ( ) ;
+          esperar ( partida . numImpostoresVivos ( ) ) . toEqual ( 1 ) ;
+          esperar ( partida . numCiudadanosVivos ( ) ) . toEqual ( 3 ) ;
+          esperar ( partida . gananCiudadanos ( ) ) . toBe ( falso ) ;
+          esperar ( partida . gananImpostores ( ) ) . toBe ( falso ) ;
+          esperar ( partida . fase . nombre ) . toEqual ( "jugando" ) ;
+          esperar ( partida . usuarios [ "pepe" ] . saltar ) . toBe ( falso ) ;
+          esperar ( partida . usuarios [ "paloma" ] . saltar ) . toBe ( falso ) ;
+          esperar ( partida . usuarios [ "luisita" ] . saltar ) . toBe ( falso ) ;
+          esperar ( partida . usuarios [ "amelia" ] . saltar ) . toBe ( falso ) ;
+          esperar ( partida . usuarios [ "pepe" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "paloma" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "luisita" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "amelia" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+        } ) ;
+        it ( "votaciones: descubren a el impostor, termina la  partida y ganan los usuarios/ciudadanos" ,  function ( )  {
+          esperar ( partida . fase . nombre ) . toEqual ( "jugando" ) ;
+          esperar ( partida . usuarios [ "pepe" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "paloma" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "luisita" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          esperar ( partida . usuarios [ "amelia" ] . estado . nombre ) . toEqual ( "vivo" ) ;
+          partida . comenzarVotacion ( ) ;
+          esperar ( partida . fase . nombre ) . toEqual ( "votacion" ) ;
+          ciudadanos [ 0 ] . votar ( impostor . nick ) ;
+          esperar ( ciudadanos [ 0 ] . saltar ) . toBe ( falso ) ;
+          esperar ( ciudadanos [ 0 ] . haVotado ) . toBe ( verdadero ) ;
+          esperar ( impostor . votos ) . toEqual ( 1 ) ;
+          ciudadanos [ 1 ] . votar ( impostor . nick ) ;
+          esperar ( ciudadanos [ 1 ] . haVotado ) . toBe ( verdadero ) ;
+          esperar ( ciudadanos [ 1 ] . saltar ) . toBe ( falso ) ;
+          esperar ( impostor . votos ) . toEqual ( 2 ) ;
+          ciudadanos [ 2 ] . votar ( impostor . nick ) ;
+          esperar ( ciudadanos [ 2 ] . saltar ) . toBe ( falso ) ;
+          esperar ( ciudadanos [ 2 ] . haVotado ) . toBe ( verdadero ) ;
+          esperar ( impostor . votos ) . toEqual ( 3 ) ;
+          esperar ( partida . numImpostoresVivos ( ) ) . toEqual ( 1 ) ;
+          esperar ( partida . numCiudadanosVivos ( ) ) . toEqual ( 3 ) ;
+          esperar ( partida . gananCiudadanos ( ) ) . toBe ( falso ) ;
+          esperar ( partida . gananImpostores ( ) ) . toBe ( falso ) ;
+          partida . eliminarMasVotado ( ) ;
+          esperar ( partida . numImpostoresVivos ( ) ) . toEqual ( 0 ) ;
+          esperar ( partida . numCiudadanosVivos ( ) ) . toEqual ( 3 ) ;
+          esperar ( partida . gananCiudadanos ( ) ) . toBe ( verdadero ) ;
+          esperar ( partida . gananImpostores ( ) ) . toBe ( falso ) ;
+          esperar ( partida . fase . nombre ) . toEqual ( "final" ) ;
+          esperar ( partida . fase . ganadores ) . toEqual ( "ciudadanos" ) ;
+          esperar ( impostor . estado . nombre ) . toEqual ( "muerto" ) ;
+        } ) ;
+
     });
   }); 
 });

@@ -81,7 +81,7 @@ function Partida(num,owner,codigo){
 	}
 
 	this.obtenerHuecos=function(){
-		return this.maximo-this.numJugadores();
+		return this.maximo - Object.keys(this.usuarios).length
 	}
 	this.numJugadores=function(){
 		return Object.keys(this.usuarios).length
@@ -172,6 +172,11 @@ function Partida(num,owner,codigo){
 		}
 		return masVotado
 	}
+
+	this.puedeEliminarMasVotado = function ( ) {
+		esto . comprobarVotacion ( ) ;
+		esto . terminarVotacion ( ) ;
+	}
 	this.iniciarVotacion=function(){
 		this.fase.iniciarVotacion(this);
 	}
@@ -188,13 +193,13 @@ function Partida(num,owner,codigo){
 		}
 	}
 	this.comprobarVotacion=function(){
-		let elegido=this.jugadorMasVotado();
+		let elegido=this.recuentoMasVotado();
 		if (elegido && elegido.votos>this.numeroSkips()){
 			elegido.esAtacado();
 		}
 	}
 
-	this.numeroImpostoresVivos=function(){
+	this.numImpostoresVivos=function(){
 		var i=0;
 		for (var usr in this.usuarios) {
 			if (this.usuarios[usr].impostor == true && this.usuarios[usr].estado.nombre=="vivo"){
@@ -244,6 +249,28 @@ function Partida(num,owner,codigo){
 			}
 		}
 	}
+	this.localizarImpostor = function ( ) {
+		var  i = 0 ;
+		var  impostor ;
+		para ( var  usr  en  este . usuarios ) {
+			if  ( this . usuarios [ usr ] . impostor  ==  true  &&  this . usuarios [ usr ] . estado . nombre  ==  "vivo" ) {
+				impostor  =  esto . usuarios [ usr ] ;
+			}
+		}
+		retorno  impostor
+	}
+	this.devolverCiudadanosVivos = function ( ) {
+		var  i = 0 ;
+		var  ciudadanos  =  [ ] ;
+		para ( var  usr  en  este . usuarios ) {
+			if  ( this . usuarios [ usr ] . impostor  ==  false  &&  this . usuarios [ usr ] . estado . nombre  ==  "vivo" ) {
+				ciudadanos [ i ]  =  esto . usuarios [ usr ] ;
+				i ++ ;
+			}
+		}
+		regresar  ciudadanos
+	}
+
 
 	this.comprobarFinal=function(){
 		if (this.gananImpostores()){
@@ -256,6 +283,21 @@ function Partida(num,owner,codigo){
 		}
 
 	}
+	this.finPartidaImpostores = function ( ) {
+		this.fase  =  new  Final ( ) ;
+		this.fase.ganadores  =  "impostores" ;
+	}
+	this.finPartidaCiudadanos = function ( ) {
+		this.fase  =  new  Final ( ) ;
+		this.fase.ganadores  =  "ciudadanos" ;
+	}
+	this.comprobarVotacion = function ( ) {
+		let  elegido = this.jugadorMasVotado ( ) ;
+		if  ( elegido  &&  elegido.votos > this.numeroSkips ( ) ) {
+			elegido.esAtacado ( ) ;
+		}
+	}
+
 
 
 	this.agregarUsuario(owner);
@@ -293,6 +335,15 @@ function Inicial(){
 	this.iniciarVotacion=function(partida){
 
 	}
+	this.eliminarMasVotado = function ( partida ) {
+		//
+	}
+	this.skipear = function ( usr ) {
+		//
+	}
+	this.devolverPartida = function ( partida ) {
+		partida.puededevolverPartida ( ) ;
+	}
 }
 
 
@@ -328,6 +379,15 @@ function Completado(){
 	this.iniciarVotacion=function(partida){
 		
 	}
+	this.eliminarMasVotado = function ( partida ) {
+		//
+	}
+	this.skipear = function ( usr ) {
+		//
+	}
+	this.devolverPartida = function ( partida ) {
+		partida . puededevolverPartida ( ) ;
+	}
 }
 
 ///////////////////FUNCION JUGANDO ////////////
@@ -352,6 +412,15 @@ function Jugando(){
 	this.iniciarVotacion=function(partida){
 		
 	}
+	this.eliminarMasVotado = function ( partida ) {
+		//
+	}
+	this.skipear = function ( usr ) {
+		//
+	}
+	this.devolverPartida = function ( partida ) {
+		//
+	}
 	
 }
 
@@ -375,6 +444,15 @@ function Votacion(){
 	this.iniciarVotacion=function(partida){
 		//
 	}
+	this.eliminarMasVotado = function ( partida ) {
+		partida.
+	}
+	this.skipear = function ( usr ) {
+		//
+	}
+	this.devolverPartida = function ( partida ) {
+		//
+	}
 }
 
 
@@ -382,6 +460,7 @@ function Votacion(){
 ///////////////////FUNCION FIN ////////////
 function Final(){
 	this.final="final";
+	this.ganadores="nadie";
 	this.agregarUsuario=function(nick,partida){
 		console.log("La partida ha terminado");
 	}
@@ -398,6 +477,15 @@ function Final(){
 
 	this.iniciarVotacion=function(partida){
 		
+	}
+	this.eliminarMasVotado = function ( partida ) {
+		//
+	}
+	this.skipear = function ( usr ) {
+		//
+	}
+	this.devolverPartida = function ( partida ) {
+		//
 	}
 }
 
@@ -444,6 +532,18 @@ function Usuario(nick,juego){
 	this.esVotado=function(){
 		this.estado.esVotado(this);
 	}
+	this.echarVotacion=function(){
+		this.estado.echarVotacion(this);
+	}
+	this.puedeecharVotacion=function(){
+		this.partida.comenzarVotacion();
+	}
+	this.skipear=function(){
+		this.partida.fase.skipear(this);
+	}
+	this.puedeSkipear=function(){
+		this.skip = true;
+	}
 }
 
 
@@ -466,6 +566,12 @@ function Vivo(){
 	this.esVotado=function(haVotado){
 		haVotado.votos ++;
 	}
+	this.echarVotacion=function(usuario){
+		usuario.puedeecharVotacion(this);
+	}
+	this.skipear=function(usr){
+		usr.puedeSkipear();
+	}
 }
 
 
@@ -483,6 +589,12 @@ function Muerto(){
 	}
 	this.esVotado=function(votado){
 		//y tampoco se puede votar a los muertos
+	}
+	this.echarVotacion=function(usuario){
+		//muerto no puede hacer nada
+	}
+	this.skipear=function(usr){
+		//
 	}
 
 }
@@ -520,3 +632,4 @@ function numeroValido(num) {
 
 module.exports.Juego=Juego;
 module.exports.Usuario=Usuario;
+module.exports.Inicial=Inicial;
