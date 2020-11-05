@@ -36,6 +36,7 @@ app.get('/crearPartida/:nick/:numero', function(request, response){
 	var nick=request.params.nick;
 	var num=parseInt(request.params.numero);
 	//ojo, nick nulo o numero
+	//var num=4;
 	var usr=new modelo.Usuario(nick);
 	var codigo = juego.crearPartida(num,usr);
 
@@ -56,7 +57,7 @@ app.get("/listaPartidas",function(request,response){
 
 
 server.listen(app.get('port'), function () {
-    console.log('Node app is running on port', app.get('port'));
+    console.log('Node esta ecuchando en el puerto', app.get('port'));
 });
 
 // app.listen(app.get('port'), function () {

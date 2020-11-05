@@ -1,0 +1,27 @@
+{
+  "name": "impostor",
+  "version": "1.0.0",
+  "description": "trabajo procesos",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine-node servidor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palomatoboso/impostor.git"
+  },
+  "keywords": [
+    "juego"
+  ],
+  "author": "Paloma Toboso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/palomatoboso/impostor/issues"
+  },
+  "homepage": "https://github.com/palomatoboso/impostor#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+    "jasmine-node": "^3.0.0",
+    "socket.io": "^2.3.0"
+  }
+}
