@@ -14,7 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-
 var juego=new modelo.Juego();
 
 app.get('/', function (request, response) {
