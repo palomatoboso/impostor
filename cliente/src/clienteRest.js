@@ -17,16 +17,37 @@ function ClienteRest(){
 		});
 	}
 
-	this.listaPartidas=function(){
-		$.getJSON("/listaPartidas",function(lista){
-			console.log(lista);
+	this.listarPartidasDisponibles=function(){
+		$.getJSON("/listarPartidas",function(lista){    
+    		console.log(lista);
 		});
-		}
+	}
+	this.iniciarPartida=function(nick, codigo){
+		$.getJSON("/crearPartida/"+nick+"/"+codigo,function(data){    
+    		console.log(data);
+		});
+	}
+	function pruebas(){
+	var codigo=undefined;
+	rest.crearPartida("pepe",3,function(data){
+		codigo=data.codigo;		
+	});
+	rest.crearPartida("pepe",4,function(data){
+		codigo=data.codigo;
+		rest.unirAPartida(codigo,"paloma");
+		rest.unirAPartida(codigo,"palomaT");
+		rest.unirAPartida(codigo,"palomaToboso");
+		rest.unirAPartida(codigo,"Saiz");
+	});
+	rest.crearPartida("pepe",5,function(data){
+		codigo=data.codigo;
+		rest.unirAPartida(codigo,"paloma");
+		rest.unirAPartida(codigo,"palomaT");
+		rest.unirAPartida(codigo,"palomaToboso");
+		rest.unirAPartida(codigo,"Saiz");
+	});
+	
+	}
 
-		this.iniciarPartida=function(nick,codigo){
-			$.getJSON("/iniciarPartida/"+nick+"/"+codigo,function(data){
-				console.log(data);
-			});
-		}
 
 }

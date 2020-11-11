@@ -23,7 +23,7 @@ this.unirAPartida=function(cod,nick){
 	if (this.partidas[cod]){
 		this.partidas[cod].agregarUsuario(nick);
 	}
-	return cod;
+	return this.partidas[cod];
 }
 
 this.eliminarPartida=function(cod){

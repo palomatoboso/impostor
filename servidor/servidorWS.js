@@ -26,8 +26,8 @@ function ServidorWS(){
 		    		//nick o codigo nulo 
 		    		var res=juego.unirAPartida(codigo,nick);
 		    		socket.join(codigo);
-		    		var owner=juego.partidas[codigo].owner;
-		    		codigo.log("Usuario"+nick);
+		    		var owner=juego.partidas[codigo].nickOwner;
+		    		codigo.log("Usuario"+nick+"se une a partida "+codigo);
 		    		cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"owner":owner});
 		    		cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",nick);
 		    });
@@ -35,10 +35,22 @@ function ServidorWS(){
 		    	//usr.iniciarPartida(); iniciar partida ToDo
 		    	//comprobar si nick es el owner 
 		    	//cli.enviarATodos(socket,codigo,"partidaIniciada",fase);
+		   		var fase = juego.partidas[codigo].usuarios[nick].iniciarPartida();
+				cli.enviarATodos(io,codigo,"iniciarPartida",fase);   
 		    });
+		    socket.on('listaPartidasDisponibles', function() {
+				var lista = juego.listarPartidasDisponibles();
+				cli.enviarRemitente(socket,"recibirListaPartidasDisponibles", lista);     		        
+			});
+			socket.on('listaPartidas', function() {
+				var lista = juego.listarPartidas();
+				cli.enviarRemitente(socket,"recibirListaPartidas", lista);     		        
+			});
 		    
 		});
 
 	}
+
+}
 
 module.exports.ServidorWS=ServidorWS;

@@ -59,7 +59,7 @@ describe("El juego del impostor", function() {
       expect(Object.keys(partida.usuarios).length==3).toBe(true);
       juego.unirAPartida(codigo, "pepe");
       expect(Object.keys(partida.usuarios).length==4).toBe(true);
-      usr.iniciarPartida(codigo);
+      juego.iniciarPartida(codigo);
       expect(partida.fase.nombre=="jugando").toBe(true);
     });
 
@@ -117,7 +117,7 @@ describe("El juego del impostor", function() {
         expect(partida.usuarios["luisita"]).not.toBe(undefined);
         expect(partida.usuarios["amelia"]).not.toBe(undefined);
         expect(partida.fase.nombre=="completado").toBe(true);
-        usr.iniciarPartida();
+        juego.iniciarPartida();
         expect(partida.fase.nombre=="jugando").toBe(true);
         expect(partida.usuarios["paloma"].encargo).not.toEqual("ninguno");
         expect(partida.usuarios["luisita"].encargo).not.toEqual("ninguno");
@@ -140,7 +140,7 @@ describe("El juego del impostor", function() {
         juego.unirAPartida(codigo, "paloma");
         juego.unirAPartida(codigo, "luisita");
         juego.unirAPartida(codigo, "amelia");
-        usr.iniciarPartida();
+        juego.iniciarPartida();
         usuarios = partida.codigo.usuarios;
         numImpostores = partida.numImpostoresVivos(); //asi sabemos quien es el impostor
         //he creado este metodo porque se podia atacar a si mismo y nadie moriria por la
