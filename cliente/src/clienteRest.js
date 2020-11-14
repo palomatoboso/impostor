@@ -27,27 +27,28 @@ function ClienteRest(){
     		console.log(data);
 		});
 	}
-	function pruebas(){
-	var codigo=undefined;
-	rest.crearPartida("pepe",3,function(data){
-		codigo=data.codigo;		
-	});
-	rest.crearPartida("pepe",4,function(data){
-		codigo=data.codigo;
-		rest.unirAPartida(codigo,"paloma");
-		rest.unirAPartida(codigo,"palomaT");
-		rest.unirAPartida(codigo,"palomaToboso");
-		rest.unirAPartida(codigo,"Saiz");
-	});
-	rest.crearPartida("pepe",5,function(data){
-		codigo=data.codigo;
-		rest.unirAPartida(codigo,"paloma");
-		rest.unirAPartida(codigo,"palomaT");
-		rest.unirAPartida(codigo,"palomaToboso");
-		rest.unirAPartida(codigo,"Saiz");
-	});
-	
-	}
-
 
 }
+
+function pruebas(){
+		var codigo=undefined;
+		rest.crearPartida("pepe",3,function(data){
+			codigo=data.codigo;		
+		});
+		rest.crearPartida("pepe",4,function(data){
+			codigo=data.codigo;
+			rest.unirAPartida(codigo,"paloma");
+			rest.unirAPartida(codigo,"palomaT");
+			rest.unirAPartida(codigo,"palomaToboso");
+			rest.unirAPartida(codigo,"Saiz");
+		});
+		rest.crearPartida("pepe",5,function(data){
+			codigo=data.codigo;
+			rest.unirAPartida(codigo,"paloma");
+			rest.unirAPartida(codigo,"palomaT");
+			rest.unirAPartida(codigo,"palomaToboso");
+			rest.unirAPartida(codigo,"Saiz");
+		});
+
+	//agregar mas
+	}
