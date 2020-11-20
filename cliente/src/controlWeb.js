@@ -3,12 +3,13 @@ function ControlWeb($){
 	this.mostrarCrearPartida=function(){
 		var cadena='<div id ="mostrarCP">';
 		  cadena=cadena+	'<div class="form-group">';
+		  cadena=cadena+'<h3>Crear Partida</h3>';
 		  cadena =cadena + '<label for="nick">Nick:</label>';
-		  cadena=cadena+ '<input type="text" class="form-control" id="nick">';
+		  cadena=cadena+ '<input value ="player" type="text" class="form-control" id="nick" value="">';
 		  cadena=cadena+ '</div>';
 		  cadena=cadena+ '<div class="form-group">';
 		  cadena=cadena+ '<label for="num">Numero:</label>';
-		  cadena=cadena+ '<input type="text" class="form-control" id="num">';
+		  cadena=cadena+ '<input value="4" type="text" class="form-control" id="num" min="4" max="10">';
 		  cadena=cadena+ '</div>';
 		  cadena=cadena+ '<button type="button" id"btnCrear" class="btn btn-primary">Crear Partida</button>';
 		  cadena=cadena+ '</div>';
@@ -18,28 +19,43 @@ function ControlWeb($){
 
 		  $('#btnCrear').on('click',function(){
 		  	var nick=$('#nick').val();
-		  	var numero=$("#num").val();
-		  	$("#mostrarCP").remove();
-		  	ws.crearPartida(nick,num);
-		  	//mostrarEsperandoRivak??
+		  	var num=$("#num").val();
+		  $("#mostrarCP").hide();
+			if(nick != ""){
+				ws.crearPartida(nick,num);
+			}else{
+				$("#mostrarCP").show();
+			}
 		  });
 
 	}
 
+	this.limpiar=function(){
+		$('#encabezado').remove();
+		$('#mUAP').remove();
+		$("#mostrarCP").remove();
+	}
+
+
 	this.mostrarEsperandoRival=function(){
 		$('#mER').remove();
 		var cadena"<div id='mER'>";
-		cadena=cadena+"<img src='cliente/img/loadin'>";
+		cadena=cadena+"<img src='cliente/img/loadin' class='img-responsive center-block'>";
 		cadena=cadena+'</div>';
+		this.limpiar();
 		$('#esperando').append(cadena);
+		ws.listarParticipantes();
 	}
 
-	this.mostrarUnirAPartida=function(){
+	this.mostrarUnirAPartida=function(lista){
 		$('#mUAP').remove();
 		var cadena='<div id="mUAP">';
+		cadena=cadena+'<h3>Unirse a una Partida</h3>';
 		cadena=cadena+ '<div class="list-group">';
 		for(var i=0;i<lista.length;i++){
- 		cadena=cadena+ ' <a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'huecos:  ' +lista[i].huecos+'</a>';
+			var maximo=lista[i].maximo
+			var numJugadores=maximo-(lista[i].huecos)
+ 		cadena=cadena+ ' <a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
  		}
  		cadena=cadena+'</div>';//cierra listGruop
  		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
@@ -59,7 +75,48 @@ function ControlWeb($){
 		  	var nick=$('#nick').val();
 		  	var codigo=StoreValue[0];
 		  	$("#mUAP").remove();
-		  	ws.unirrPartida(nick,num);
+		  	if(codigo!=undefined && nick!=""){
+				ws.unirAPartida(codigo,nick);
+			}
+			else{
+				ws.listaPartidasDisponibles();
+			}
+
 		  });
+
+
 	}
+
+	this.mostrarIniciarPartida=function(){
+		$('#mIP').remove();
+		var cadena='<div id="mostrarlaIP">';
+		cadena=cadena+'</div>';
+		cadena=cadena+'<button type="button" id="btnComenzar" class="btn btn-primary">Iniciar la Partida</button>';
+		cadena=cadena+'</div>';
+
+		$('#esperando').append(cadena);
+
+		$('#btnComenzar').on('click',function(){
+			ws.iniciarPartida();
+		});
+	}
+
+	this.mostrarParticipantes=function(lista){
+		$('#mP').remove();
+		var cadena='<div id="mP">';
+		cadena=cadena+'<h3>Lista de los Participantes</h3>';
+		cadena=cadena+'<div class="list-group">';
+		for(var i=0;i<lista.length;i++){
+	  		cadena=cadena+'<li value="'+lista[i].nick+'" class="list-group-item">'+lista[i].nick+'</li>';
+	  	}
+		cadena=cadena+'</div>';
+		cadena=cadena+'</div>';
+
+		$('#uniendo').append(cadena);
+	}
+
+	this.actualizarJugadores=function(){
+		ws.listarParticipantes();
+	}
+
 }

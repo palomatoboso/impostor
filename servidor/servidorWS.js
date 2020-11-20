@@ -88,21 +88,26 @@ function ServidorWS(){
 				cli.enviarRemitente(socket,"recibirEncargo",res);
 			});
 
-			socket.on("atacar",function(nick,codigo,inocente){
-				juego.atacar(nick,codigo,inocente);
+			socket.on("atacar",function(nick,codigo,atacado){
+				juego.atacar(nick,codigo,atacado);
 				var partida=juego.partidas[codigo];
-				var fase=partida.fase.nombre;
-				if (fase=="final"){
-					cli.enviarATodos(io, codigo, "final","ganan impostores");
+				if (partida.fase.nombre == "final"){
+					var data={"Fase":partida.fase.nombre,"Ganadores":partida.fase.ganadores};
+					cli.enviarATodos(io,codigo,"final",data);
+				}else{
+					//avisar al inocente
+					cli.enviarRemitente(socket,"muereInocente", partida.fase.nombre);
 				}
-				else{
-					cli.enviarRemitente(socket,"muereInocente",fase);
-				}
-			})
 
 		});
-	}
+			socket.on('listarParticipantes', function(codigo) {
+				var lista = juego.listarParticipantes(codigo);
+				cli.enviarRemitente(socket,"recibirListaParticipantes", lista);     		        
+			});
+	});
 
 }
 
+
+}
 module.exports.ServidorWS=ServidorWS;
