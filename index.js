@@ -23,6 +23,14 @@ app.get('/', function (request, response) {
     response.send(contenido);
     
 });
+
+app.get('/game', function (request, response) {
+    var contenido = fs.readFileSync(__dirname + "/cliente/index-game.html"); 
+    
+    response.setHeader("Content-type", "text/html");
+    response.send(contenido);
+    
+});
 //nombre-ruta-api/:param1/:param2/:......
 //app.get('/nuevoUsuario/:nick', function(request,response){
 //	var nick=request.params.nick;
@@ -36,13 +44,13 @@ app.get('/crearPartida/:nick/:numero', function(request, response){
 	var num=parseInt(request.params.numero);
 	//ojo, nick nulo o numero
 	//var num=4;
-	var usr=new modelo.Usuario(nick);
+	//var usr=new modelo.Usuario(nick);
 	var codigo = juego.crearPartida(num,usr);
 
 	response.send({"codigo":codigo});
 });
 
-app.get ("/unirAPartida/:nick/:codigo",function(request,response){
+app.get ("/unirAPartida/:codigo/:nick",function(request,response){
 var nick=request.params.nick;
 var codigo=request.params.codigo;
 var res=juego.unirAPartida(codigo,nick);
@@ -50,7 +58,7 @@ response.send({"res":res});
 });
 
 app.get("/listaPartidas",function(request,response){
-	var lista=juego.listaPartidas();
+	var lista=juego.listaPartidasDisponibles();
 	response.send(lista);
 });
 

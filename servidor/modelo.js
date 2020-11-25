@@ -336,6 +336,7 @@ function Partida(num,owner,codigo){
 	this.comprobarVotacion=function(){
 		let elegido=this.recuentoMasVotado();
 		if (elegido && elegido.votos>this.numeroSkips()){
+			this.elegido=elegido.nick;
 			elegido.esAtacado();
 		}
 	}

@@ -55,11 +55,10 @@ function ControlWeb($){
 		for(var i=0;i<lista.length;i++){
 			var maximo=lista[i].maximo
 			var numJugadores=maximo-(lista[i].huecos)
- 		cadena=cadena+ ' <a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
+ 			cadena=cadena+ ' <a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
  		}
  		cadena=cadena+'</div>';//cierra listGruop
  		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
- 		
  		cadena=cadena+'</div>';//cierra mUAP
 
  		$('#unirAPartida').append(cadena);

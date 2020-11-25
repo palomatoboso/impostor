@@ -49,9 +49,7 @@ function ServidorWS(){
 				cli.enviarRemitente(socket,"recibirListaPartidas", lista);     		        
 			});
 
-			socket.on("obtenerEncargo",function(nick,codigo){
-				cli.enviarRemitente(socket,"recibirEncargo",juego.obtenerEncargo(nick,codigo));
-			});
+			
 
 			socket.on("echarVotacion",function(nick,codigo){
 				juego.lanzarVotacion(nick,codigo);
@@ -84,10 +82,10 @@ function ServidorWS(){
 			});
 
 			socket.on("obtenerEncargo",function(nick,codigo){
-				var res=juego.obtenerEncargo(nick,codigo);
-				cli.enviarRemitente(socket,"recibirEncargo",res);
+				cli.enviarRemitente(socket,"recibirEncargo",juego.obtenerEncargo(nick,codigo));
 			});
 
+			
 			socket.on("atacar",function(nick,codigo,atacado){
 				juego.atacar(nick,codigo,atacado);
 				var partida=juego.partidas[codigo];
