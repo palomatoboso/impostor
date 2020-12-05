@@ -4,9 +4,13 @@ var app = express();
 var server = require('http').Server(app);
 var bodyParser = require("body-parser");
 var io = require('socket.io').listen(server);
+
 var modelo=require("./servidor/modelo.js")
 var wss=require("./servidor/servidorWS.js");
+
+
 var servidorWS=new wss.ServidorWS();
+
 app.set('port', process.env.PORT || 5000);
 
 app.use(express.static(__dirname + '/'));
@@ -31,21 +35,15 @@ app.get('/game', function (request, response) {
     response.send(contenido);
     
 });
-//nombre-ruta-api/:param1/:param2/:......
-//app.get('/nuevoUsuario/:nick', function(request,response){
-//	var nick=request.params.nick;
-//	var numero=request.params.numero;
-//	var usr=new modelo.Usuario(nick);
 
-//});
 
-app.get('/crearPartida/:nick/:numero', function(request, response){
+app.get("/crearPartida/:nick/:num",function(request,response){
 	var nick=request.params.nick;
-	var num=parseInt(request.params.numero);
-	//ojo, nick nulo o numero
+	var num=parseInt(request.params.num);
+	//ojo, nick nulo o numero nulo
 	//var num=4;
 	//var usr=new modelo.Usuario(nick);
-	var codigo = juego.crearPartida(num,usr);
+	var codigo=juego.crearPartida(num,nick);
 
 	response.send({"codigo":codigo});
 });

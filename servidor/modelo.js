@@ -13,15 +13,15 @@ function Juego(){
 			}
 			return codigo;
 		} else{
-		let codigo="Error"; //tam partida
-		return codigo;
+			let codigo="Error"; //tam partida
+			return codigo;
 		}
 
 	}
 	this.unirAPartida=function(cod,nick){
 		//var res=-1;
 		if (this.partidas[cod]){
-			this.partidas[cod].agregarUsuario(nick);
+			res = this.partidas[cod].agregarUsuario(nick);
 		}
 		return cod;
 	}
@@ -63,7 +63,7 @@ function Juego(){
 			}
 			return lista;
 	}
-	this.echarVotacion=function(nick,codigo){
+	this.echarVotacion=function(codigo, nick){
 		var usr=this.partidas[codigo].usuario[nick];
 		this.reiniciarContadores(codigo);
 		usr.lanzarVotacion();
@@ -116,11 +116,13 @@ function Juego(){
 		return lista
 	}
 
-}
+}	this.obtenerListaJugadores=function(codigo){
+		return this.partidas[codigo].obtenerListaJugadores();
+	}
 
 
 ///////////////////FUNCION PARTIDAS ////////////
-function Partida(num,owner,codigo){
+function Partida(num,owner,codigo, juego){
 	this.juego=juego;
 	this.maximo=num;
 	this.nickOwner=owner;
@@ -130,7 +132,7 @@ function Partida(num,owner,codigo){
 	this.elegido="no hay nadie elegido";
 	this.encargos=["jardines","calles","mobiliario","basuras"];
 	this.agregarUsuario=function(nick){
-		this.fase.agregarUsuario(nick,this)
+		return this.fase.agregarUsuario(nick,this)
 	}
 	this.puedeAgregarUsuario=function(nick){
 		let nuevo=nick;
@@ -141,6 +143,14 @@ function Partida(num,owner,codigo){
 		}
 		this.usuarios[nuevo]=new Usuario(nuevo);
 		this.usuarios[nuevo].partida = this;
+		var numero = this.numJugadores() - 1;
+		this.usuarios[nuevo].numJugador = numero;
+		if (this.comprobarMinimo()){
+		 	this.fase=new Completado();
+		}
+		return {"codigo":this.codigo,"nick":nuevo,"numJugador":numero};
+
+
 	}
 	this.obtenerUsuarios=function(nick){
 		return this.usuarios[nick]
@@ -157,7 +167,13 @@ function Partida(num,owner,codigo){
 	this.comprobarMaximo=function () {
 		return Object.keys(this.usuarios).length < this.maximo
 	}
-
+	this.obtenerListaJugadores=function(){
+		var lista[]
+		for (var key in this.usuarios){
+			lista.push({nick:key, numJugador:numero});
+		}
+		return lista;//Objetc.key(this.usuarios);
+	}
 	this.obtenerHuecos=function(){
 		return this.maximo - Object.keys(this.usuarios).length
 	}
@@ -548,13 +564,13 @@ function Jugando(){
 	this.iniciarVotacion=function(partida){
 		partida.puedeComenzarVotacion();
 	}
-	this.eliminarMasVotado = function ( partida ) {
+	this.eliminarMasVotado = function (partida) {
 		//
 	}
-	this.skipear = function ( usr ) {
+	this.skipear = function (usr) {
 		//
 	}
-	this.devolverPartida = function ( partida ) {
+	this.devolverPartida = function (partida) {
 		//
 	}
 	
@@ -725,7 +741,7 @@ function Muerto(){
 	this.atacar=function(nick,partida){
 		//muerto no ataca
 	}
-	this.esAtacado=function(nick){
+	this.esAtacado=function(atacado, nick){
 		//tampoco puedes atacar a un miertp
 		
 	}

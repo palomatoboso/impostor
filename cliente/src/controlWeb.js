@@ -17,23 +17,19 @@ function ControlWeb($){
 
 		  $('#crearPartida').append(cadena);
 
-		  $('#btnCrear').on('click',function(){
-		  	var nick=$('#nick').val();
-		  	var num=$("#num").val();
-		  $("#mostrarCP").hide();
-			if(nick != ""){
-				ws.crearPartida(nick,num);
-			}else{
-				$("#mostrarCP").show();
-			}
-		  });
+		 $('#btnCrear').on('click',function(){
+			var nick=$('#nick').val();
+			var num=$("#num").val();
+			$("#mostrarCP").remove();
+			ws.crearPartida(nick,num);
+		});
+		
 
 	}
 
 	this.limpiar=function(){
-		$('#encabezado').remove();
-		$('#mUAP').remove();
-		$("#mostrarCP").remove();
+		$('#esperando').remove();
+		$('#uniendo').remove();
 	}
 
 
