@@ -512,8 +512,7 @@
   function lanzarJugadorRemoto(nick, numJugador){
     var frame=recursos[numJugador].frame;
      jugadores[nick]= crear.physics.add.sprite(spawnPoint.x+15*numJugador, spawnPoint.y,"varios",frame);    
-      // Watch the player and worldLayer for collisions, for the duration of the scene:
-      crear.physics.add.collider(jugadores[nick], worldLayer);
+     crear.physics.add.collider(jugadores[nick], worldLayer);
   }
 
   function mover(direccion,nick,numJugador,x,y){

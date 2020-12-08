@@ -2,17 +2,17 @@ function ControlWeb($){
 
 	this.mostrarCrearPartida=function(){
 		var cadena='<div id ="mostrarCP">';
-		  cadena=cadena+	'<div class="form-group">';
+		  cadena=cadena+'<div class="form-group">';
 		  cadena=cadena+'<h3>Crear Partida</h3>';
 		  cadena =cadena + '<label for="nick">Nick:</label>';
-		  cadena=cadena+ '<input value ="player" type="text" class="form-control" id="nick" value="">';
-		  cadena=cadena+ '</div>';
-		  cadena=cadena+ '<div class="form-group">';
-		  cadena=cadena+ '<label for="num">Numero:</label>';
-		  cadena=cadena+ '<input value="4" type="text" class="form-control" id="num" min="4" max="10">';
-		  cadena=cadena+ '</div>';
-		  cadena=cadena+ '<button type="button" id"btnCrear" class="btn btn-primary">Crear Partida</button>';
-		  cadena=cadena+ '</div>';
+		  cadena=cadena+'<input value ="player" type="text" class="form-control" id="nick" value="">';
+		  cadena=cadena+'</div>';
+		  cadena=cadena+'<div class="form-group">';
+		  cadena=cadena+'<label for="num">Numero:</label>';
+		  cadena=cadena+'<input value="4" type="text" class="form-control" id="num" min="4" max="10">';
+		  cadena=cadena+'</div>';
+		  cadena=cadena+'<button type="button" id"btnCrear" class="btn btn-primary">Crear Partida</button>';
+		  cadena=cadena+'</div>';
 
 
 		  $('#crearPartida').append(cadena);
@@ -20,8 +20,12 @@ function ControlWeb($){
 		 $('#btnCrear').on('click',function(){
 			var nick=$('#nick').val();
 			var num=$("#num").val();
-			$("#mostrarCP").remove();
-			ws.crearPartida(nick,num);
+			$("#mostrarCP").hide();
+			if(nick != ""){
+				ws.crearPartida(nick,num);
+			}else{
+				$("#mostrarCP").show();
+			}
 		});
 		
 
@@ -29,14 +33,15 @@ function ControlWeb($){
 
 	this.limpiar=function(){
 		$('#esperando').remove();
-		$('#uniendo').remove();
+		$('#mUAP').remove();
+		$("#mostrarCP").remove();
 	}
 
 
 	this.mostrarEsperandoRival=function(){
 		$('#mER').remove();
 		var cadena"<div id='mER'>";
-		cadena=cadena+"<img src='cliente/img/loadin' class='img-responsive center-block'>";
+		cadena=cadena+"<img src='cliente/img/loading.gif' class='img-responsive center-block'>";
 		cadena=cadena+'</div>';
 		this.limpiar();
 		$('#esperando').append(cadena);
@@ -51,7 +56,7 @@ function ControlWeb($){
 		for(var i=0;i<lista.length;i++){
 			var maximo=lista[i].maximo
 			var numJugadores=maximo-(lista[i].huecos)
- 			cadena=cadena+ ' <a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
+ 			cadena=cadena+'<a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
  		}
  		cadena=cadena+'</div>';//cierra listGruop
  		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
@@ -112,6 +117,11 @@ function ControlWeb($){
 
 	this.actualizarJugadores=function(){
 		ws.listarParticipantes();
+	}
+
+	this.limpiarLog=function(){
+		$('#esperando').remove();
+		$('#uniendo').remove();
 	}
 
 }

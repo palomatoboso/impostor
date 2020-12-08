@@ -78,7 +78,7 @@ function ServidorWS(){
 				cli.enviarATodos(io,codigo,"votacion",fase);
 			});
 
-			socket.on("saltarVoto"function(codigo,nick){
+			socket.on("saltarVoto",function(codigo,nick){
 				var partida=juego.partidas[codigo];
 				juego.saltarVoto(codigo, nick);
 				if (partida.hanVotadoTodos()){
