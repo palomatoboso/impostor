@@ -53,8 +53,9 @@ function ClienteWS(){
 	this.atacar=function(atacado){
 		this.socket.emit("atacar",this.codigo,this.nick,atacado);
 	}
-	this.movimiento=function(x,y){
-		this.socket.emit("movimiento",this.codigo,this.nick,this.numJugador, direccion);
+	this.movimiento=function(direccion,x,y){
+		var datos={nick:this.nick,codigo:this.codigo, numJugador:this.numJugador,direccion:direccion,x:x, y:y};
+		this.socket.emit("movimiento",datos);
 	}
 
 	this.listarParticipantes=function(){
@@ -141,8 +142,8 @@ function ClienteWS(){
 				}
 			}
 		});
-		this.socket.on('moverRemoto',function(datos){
-			moverRemoto(datos.direccion,datos.nick,datos.numJugador);
+		this.socket.on("moverRemoto",function(datos){
+			mover(datos);
 		});
 		
 	}

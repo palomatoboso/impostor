@@ -511,14 +511,19 @@
 
   function lanzarJugadorRemoto(nick, numJugador){
     var frame=recursos[numJugador].frame;
-     jugadores[nick]= crear.physics.add.sprite(spawnPoint.x+15*numJugador, spawnPoint.y,"varios",frame);    
+     jugadores[nick]= crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",frame);    
      crear.physics.add.collider(jugadores[nick], worldLayer);
   }
 
-  function mover(direccion,nick,numJugador,x,y){
-    
-      var remoto=jugadores[nick];
-      const speed = 175;
+  function mover(datos){
+
+    var direccion=datos.direccion;
+    var nick=datos.nick;
+    var numJugador=datos.numJugador;
+    var x= datos.x;
+    var y= datos.y;
+    var remoto=jugadores[nick];
+    const speed = 175;
      // const prevVelocity = player.body.velocity.clone();
       const nombre=recursos[numJugador].sprite;
      if (remoto){
@@ -587,14 +592,14 @@
   function update(time, delta) {
        const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
-
+      var direccion= "stop";
     const nombre=recursos[ws.numJugador].sprite;
 
     // Stop any previous movement from the last frame
     player.body.setVelocity(0);
     //player2.body.setVelocity(0);
 
-    var direccion= "stop";
+    
 
     // Horizontal movement
     if (cursors.left.isDown) {
@@ -631,10 +636,12 @@
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
+    }
 
-     
 
-   
-  }
+}
+
+
+
 
 

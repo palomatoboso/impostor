@@ -512,7 +512,7 @@ function Juego(){
 		}
 		this.agregarUsuario=function(nick,partida){
 			if (partida.comprobarMaximo()){
-				partida.puedeAgregarUsuario(nick);
+				return partida.puedeAgregarUsuario(nick);
 			}
 			else{
 				console.log("Lo siento, numero máximo, partida llena");
