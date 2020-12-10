@@ -109,12 +109,13 @@ function ServidorWS(){
 			socket.on("atacar",function(codigo, nick,atacado){
 				juego.atacar(codigo,nick,atacado);
 				var partida=juego.partidas[codigo];
+				var fase= partida.fase.nombre;
 				if (partida.fase.nombre == "final"){
-					var data={"Fase":partida.fase.nombre,"Ganadores":partida.fase.ganadores};
-					cli.enviarATodos(io,codigo,"final",data);
+					
+					cli.enviarATodos(io,codigo,"final","ganan impostores");
 				}else{
 					//avisar al inocente
-					cli.enviarRemitente(socket,"muereInocente", partida.fase.nombre);
+					cli.enviarATodos(io,codigo,"muereInocente", inocente);
 				}
 
 		});

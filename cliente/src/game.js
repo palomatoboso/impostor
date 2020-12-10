@@ -44,6 +44,7 @@
   //en el caso de tener una hoja con muchos:
   var recursos=[{ frame :0, sprite: "ana"}, { frame 3, sprite:"tom",}, { frame 9, sprite:"loi",}];
   let showDebug = false;
+  var remotos;  
 
   function preload() {
     this.load.image("tiles", "cliente/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -60,6 +61,8 @@
     //repetir esto por cada personaje diferente o usar una hoja con 10 personajes 
     //en el caso de tener muchos personajes en una hoja
      this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:24,frameHei‌ght:26});‌ 
+    this.load.spritesheet("muertos1","cliente/assets/images/muertos1.png",{frameWidth:24,frameHei‌ght:26});‌ 
+    this.load.spritesheet("muertos2","cliente/assets/images/muertos2.png",{frameWidth:24,frameHei‌ght:26});‌ 
   }
 
   function create() {
@@ -72,7 +75,7 @@
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
     const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
-    const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
+    worldLayer = map.createStaticLayer("World", tileset, 0, 0);
     const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
 
     worldLayer.setCollisionByProperty({ collides: true });
@@ -493,6 +496,8 @@
     //camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
       cursors = crear.input.keyboard.createCursorKeys();
+      remotos=crear.add.group();
+      teclaA=crear.input.keyboard.addKey('a');
       lanzarJugador(ws.numJugador);
       ws.estoyDentro();
 
@@ -511,9 +516,32 @@
 
   function lanzarJugadorRemoto(nick, numJugador){
     var frame=recursos[numJugador].frame;
-     jugadores[nick]= crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",frame);    
-     crear.physics.add.collider(jugadores[nick], worldLayer);
+    var punto={x:310,y:1185};
+    if(!jugadores[nick] && crear){
+      jugadores[nick]=crear.physics.add.sprite(punto.x, punto.y,"varios",frame);
+      jugadores[nick].nick=nick;
+      jugadores[nick].numJugador=numJugador;
+      crear.physics.add.collider(jugadores[nick], worldLayer);
+      remotos.add(jugadores[nick]);
+    }
   }
+    
+     function crearColision(){
+        if(crear && ws.impostor){
+          crear.physics.add.overlap(player,remotos,kill)
+        }
+     }
+
+    function kill(sprite, inocente){
+      //dibujar el inocente muerto
+      //avisar al servidor
+      var nick=inocente.nick;
+      //console.log("atacando a"+nick);
+       if(teclaA.isDown){
+        //console.log('muere inocente');
+        ws.atacar(nick);
+        }
+    }
 
   function mover(datos){
 
