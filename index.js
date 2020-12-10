@@ -37,7 +37,7 @@ app.get('/game', function (request, response) {
 });
 
 
-app.get('/crearPartida/:nick/:numero',function(request,response){
+app.get("/crearPartida/:nick/:numero",function(request,response){
 	var nick=request.params.nick;
 	var num=parseInt(request.params.numero);
 	//ojo, nick nulo o numero nulo
@@ -48,14 +48,14 @@ app.get('/crearPartida/:nick/:numero',function(request,response){
 	response.send({"codigo":codigo});
 });
 
-app.get ('/unirAPartida/:codigo/:nick',function(request,response){
+app.get ("/unirAPartida/:codigo/:nick",function(request,response){
 var nick=request.params.nick;
 var codigo=request.params.codigo;
 var res=juego.unirAPartida(codigo,nick);
 response.send({"res":res}); 
 });
 
-app.get('/listaPartidasDisponibles',function(request,response){
+app.get("/listaPartidasDisponibles",function(request,response){
 	var lista=juego.listaPartidasDisponibles();
 	response.send(lista);
 });

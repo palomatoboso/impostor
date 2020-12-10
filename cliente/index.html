@@ -2,7 +2,9 @@
 <html>
 <head>
 	<title>Impostor</title>
-	<body background="cliente/img/impostor.jpg" height="5%" width="5%">
+
+		<img id="encabezado" src='cliente/img/impostor.png' class='img-responsive center-block'>
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>               
 	<link rel="stylesheet" href="cliente/lib/bootstrap.min.css">
@@ -30,25 +32,28 @@
 
 
 <body>
+
+
+
 	<div class="container">
-					<style>
+
+		<style>
 						body {
 						  background-image: url('cliente/img/amongusfondo.jpg');  
 						}
 					</style>
+					
 		<h3>Impostor App</h3>
-			<img id="encabezado" src='cliente/img/impostor.png' class='img-responsive center-block'>
+		
 
-			<div>
+		
 		<div class="row">
 	    <div class="col-sm-6">
 	      	<div id="crearPartida"></div>
+	        <div id="esperando"></div>
 	      	<div id="unirAPartida"></div>
-  		    <div id="esperando"></div>
-  		    <div id="uniendo"></div>
-	    </div>
-
-
+	     </div>
+	
 	    <div class="col-sm-6">
 	      <div id="listaPartidas"></div>
 		  <div id="listaEsperando"></div>
@@ -59,20 +64,20 @@
 	    <div class="row">
 	    	<div id="game-container"></div>
 	    </div>
-
-
-
-	  </div>
-	</div>
+		</div>
 	</div>
 
-<script>
-	var rest=new ClienteRest();
-	var ws=new ClienteWS();
-	var cw=new ControlWeb($);
-	cw.mostrarCrearPartida();
-	ws.listaPartidasDisponibles();
-</script>
+
+	
+	
+
+	<script>
+		var rest=new ClienteRest();
+		var ws=new ClienteWS();
+		var cw=new ControlWeb($);
+		cw.mostrarCrearPartida();
+		ws.listaPartidasDisponibles();
+	</script>
 
 
 </body>

@@ -40,8 +40,8 @@ describe("El juego del impostor", function() {
             expect(partida.maximo==4).toBe(true);
             expect(Object.keys(partida.usuarios).length==1).toBe(true);
         });
-        
 
+        
         it("3 usuario se unen mediante unirAPartida de partida", function() {
           juego.unirAPartida(codigo, "pepe");
           expect(Object.keys(partida.usuarios).length==2).toBe(true);

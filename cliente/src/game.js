@@ -519,7 +519,7 @@
     
       var remoto=jugadores[nick];
       const speed = 175;
-      const prevVelocity = player.body.velocity.clone();
+     // const prevVelocity = player.body.velocity.clone();
       const nombre=recursos[numJugador].sprite;
      if (remoto){
     
@@ -542,7 +542,7 @@
  }
 
 
-  function moverRemoto(direccion,nick,numJugador){
+/*  function moverRemoto(direccion,nick,numJugador){
      var remoto = jugadores[nick];
     const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
@@ -583,7 +583,7 @@
       remoto.anims.stop();  
     }
   }
-
+*/
   function update(time, delta) {
        const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
@@ -594,27 +594,29 @@
     player.body.setVelocity(0);
     //player2.body.setVelocity(0);
 
+    var direccion= "stop";
+
     // Horizontal movement
     if (cursors.left.isDown) {
       player.body.setVelocityX(-speed);
-      ws.movimiento("left");
+      direccion="left";
     } else if (cursors.right.isDown) {
       player.body.setVelocityX(speed);
-      ws.movimiento("right");
+     direccion="right";
     }
 
     // Vertical movement
     if (cursors.up.isDown) {
       player.body.setVelocityY(-speed);
-      ws.movimiento("up");
+      direccion="up";
     } else if (cursors.down.isDown) {
       player.body.setVelocityY(speed);
-      ws.movimiento("down");
+      direccion="down";
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
-
+    ws.movimiento(direccion,player.body.x,player.body.y);
     // Update the animation last and give left/right animations precedence over up/down animations
     if (cursors.left.isDown) {
       player.anims.play(nombre+"-left-walk", true);
