@@ -27,15 +27,6 @@ function ClienteWS(){
 	this.listaPartidas=function(){
 		this.socket.emit("listaPartidas");
 	}
-	this.socket.on('dibujarRemoto',function(lista){
-		console.log(lista);
-		for(car i=0;i<lista.length;i++){
-			if (){
-			lanzarJugadorRemoto(el.nick,el.numJugador);
-			}
-		}
-		
-	});
 	this.estoyDentro=function(){
 		this.socket.emit("estoyDentro",this.codigo,this.nick);
 	}
@@ -107,22 +98,22 @@ function ClienteWS(){
 		this.socket.on('recibirListaPartidasDisponibles',function(lista){
 			console.log(lista);
 			if (!cli.codigo){
-			cw.mostrarUnirAPartida(lista);
+				cw.mostrarUnirAPartida(lista);
 			}
 		});
 		this.socket.on('recibirListaPartidas',function(lista){
 			console.log(lista);
 		});
-		this.socket.on("votacion"function(data){
+		this.socket.on('votacion',function(data){
 			console.log(data);
 		});
-		this.socket.on("comprobarFinalVotacion",function(data){
+		this.socket.on('comprobarFinalVotacion',function(data){
 			console.log(data);
 		});
-		this.socket.on("haVotado",function(data){
+		this.socket.on('haVotado',function(data){
 			console.log(data);
 		});
-		this.socket.on("recibirEncargo",function(data){
+		this.socket.on('recibirEncargo',function(data){
 			console.log(data);
 			cli.impostor=data.impostor;
 			if(data.impostor){
@@ -130,10 +121,10 @@ function ClienteWS(){
 				//crearColision();
 			}
 		});
-		this.socket.on("final",function(data){
+		this.socket.on('final',function(data){
 			console.log(data);
 		});
-		this.socket.on("muereInocente",function(inocente){
+		this.socket.on('muereInocente',function(inocente){
 			console.log('muere '+inocente);
 		});
 		this.socket.on('recibirListaParticipantes',function(lista){
@@ -149,7 +140,7 @@ function ClienteWS(){
 			}
 			crearColision();
 		});
-		this.socket.on("moverRemoto",function(datos){
+		this.socket.on('moverRemoto',function(datos){
 			mover(datos);
 		});
 		

@@ -42,7 +42,7 @@
   let camera;
   var spawnPoint;
   //en el caso de tener una hoja con muchos:
-  var recursos=[{ frame :0, sprite: "ana"}, { frame 3, sprite:"tom",}, { frame 9, sprite:"loi",}];
+  var recursos=[{ frame:0, sprite: "ana"}, { frame:3, sprite:"tom"}, { frame:9, sprite:"loi"}];
   let showDebug = false;
   var remotos;  
 
