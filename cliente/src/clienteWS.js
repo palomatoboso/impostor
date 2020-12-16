@@ -28,7 +28,7 @@ function ClienteWS(){
 		this.socket.emit("listaPartidas");
 	}
 	this.estoyDentro=function(){
-		this.socket.emit("estoyDentro",this.codigo,this.nick);
+		this.socket.emit("estoyDentro",this.nick,this.codigo);
 	}
 	this.echarVotacion=function(){
 		this.socket.emit("echarVotacion",this.codigo,this.nick);
@@ -52,6 +52,10 @@ function ClienteWS(){
 
 	this.listarParticipantes=function(){
 		this.socket.emit("listarParticipantes", this.codigo);
+	}
+
+	this.realizarTarea=function(){
+		this.socket.emit("realizarTarea",this.nick,this.codigo);
 	}
 	/*this.ini=function(){
 		this.socket=io.connect();
@@ -143,6 +147,9 @@ function ClienteWS(){
 		this.socket.on('moverRemoto',function(datos){
 			mover(datos);
 		});
+		this.socket.on('realizarTarea',function()){
+			
+		}
 		
 	}
 

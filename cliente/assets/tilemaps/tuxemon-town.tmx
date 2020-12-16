@@ -3387,6 +3387,12 @@
    </wangset>
   </wangsets>
  </tileset>
+ <tileset firstgid="721" name="[A]WaterFall_pipo" tilewidth="32" tileheight="32" tilecount="576" columns="32">
+  <properties>
+   <property name="tarea" value="jardines"/>
+  </properties>
+  <image source="../../../../../../../../../../../Downloads/Pipoya RPG Tileset 32x32/SampleMap/[A]WaterFall_pipo.png" width="1024" height="576"/>
+ </tileset>
  <layer id="1" name="Below Player" width="40" height="40">
   <data encoding="csv">
 126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,

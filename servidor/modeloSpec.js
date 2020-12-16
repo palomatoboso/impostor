@@ -248,7 +248,10 @@ describe("El juego del impostor", function() {
                 expect(partida.fase.nombre).toEqual("final");
                 expect(partida.fase.ganadores).toEqual("impostores");
               })
-
+              //it "realizar tareas", function(){
+                //var partida=juego.partidas[codigo];
+                //for(var i=0; )
+              //}
 
               it("Ataca el impostor y mata a todos",function(){
                 var partida=juego.partidas[codigo];

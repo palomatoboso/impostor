@@ -503,6 +503,13 @@
 
   }
 
+  function tareas(sprite,objeto){
+    if(ws.encargo==objeto.properties.tarea && teclaT.isDown){
+      console.log("realizar tarea"+ws.encargo);
+      ws.realizarTarea();
+    }
+  }
+
   function lanzarJugador(numJugador){
       player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
       // Watch the player and worldLayer for collisions, for the duration of the scene:

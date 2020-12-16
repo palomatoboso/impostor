@@ -18,13 +18,13 @@ function Juego(){
 		}
 
 	}
-	this.unirAPartida=function(cod,nick){
-			//var res=-1;
-			if (this.partidas[cod]){
-				res = this.partidas[cod].agregarUsuario(nick);
-			}
-			return cod;
-	}
+		this.unirAPartida=function(cod,nick){
+				//var res=-1;
+				if (this.partidas[cod]){
+					res = this.partidas[cod].agregarUsuario(nick);
+				}
+				return res;
+		}
 
 		this.iniciarPartida=function(codigo, nick){
 				var owner=this.partidas[codigo].nickOwner;
@@ -116,9 +116,11 @@ function Juego(){
 			return lista
 		}
 
-	}	this.obtenerListaJugadores=function(codigo){
+		this.obtenerListaJugadores=function(codigo){
 			return this.partidas[codigo].obtenerListaJugadores();
 		}
+		
+	}
 
 
 	///////////////////FUNCION PARTIDAS ////////////
@@ -218,6 +220,8 @@ function Juego(){
 			}
 		}
 		this.asignarImpostor=function(){
+			let listaNicks=Object.keys(this.usuarios);
+			//let ind=
 			this.nicks=Object.keys(this.usuarios);
 			this.usuarios[this.nicks[randomInt(0,this.nicks.length)]].impostor=true;
 		}
@@ -453,6 +457,9 @@ function Juego(){
 			}
 			return lista;
 		}
+		this.tareaTerminada=function(){
+			
+		}
 
 
 
@@ -467,10 +474,7 @@ function Juego(){
 		this.nombre="inicial";
 
 		this.agregarUsuario=function(nick,partida){
-			partida.puedeAgregarUsuario(nick);
-			if (partida.comprobarMinimo()){
-				partida.fase=new Completado();
-			}		
+			return partida.puedeAgregarUsuario(nick);		
 		}
 		this.iniciarPartida=function(partida){
 			console.log("Faltan jugadores");
@@ -512,7 +516,7 @@ function Juego(){
 		}
 		this.agregarUsuario=function(nick,partida){
 			if (partida.comprobarMaximo()){
-				return partida.puedeAgregarUsuario(nick);
+				 partida.puedeAgregarUsuario(nick);
 			}
 			else{
 				console.log("Lo siento, numero máximo, partida llena");
@@ -531,10 +535,10 @@ function Juego(){
 		this.iniciarVotacion=function(partida){
 			
 		}
-		this.eliminarMasVotado = function (partida) {
+		this.eliminarMasVotado = function(partida){
 			//
 		}
-		this.skipear = function (usr) {
+		this.skipear= function(usr){
 			//
 		}
 		this.devolverPartidasLibres=function(partida){
@@ -564,13 +568,13 @@ function Juego(){
 		this.iniciarVotacion=function(partida){
 			partida.puedeIniciarVotacion();
 		}
-		this.eliminarMasVotado = function (partida) {
+		this.eliminarMasVotado = function(partida){
 			//
 		}
-		this.skipear = function (usr) {
+		this.skipear = function(usr){
 			//
 		}
-		this.devolverPartida = function (partida) {
+		this.devolverPartidasLibres= function(partida){
 			//
 		}
 		

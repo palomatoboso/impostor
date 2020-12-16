@@ -30,6 +30,77 @@ function ControlWeb($){
 		
 
 	}
+	this.limpiar=function(){
+		$('#encabezado').remove();
+		$('#mUAP').remove();
+		$("#mostrarCP").remove();
+	}
+
+	this.mostrarEsperandoRival=function(){
+		$('#mER').remove();
+		var cadena='<div id="mER"><h3>Esperando rival</h3>';
+		cadena=cadena+"<img src='cliente/img/loading.gif' class='img-responsive center-block'>";
+		cadena=cadena+"</div>";
+		this.limpiar();
+		$('#esperando').append(cadena);
+		ws.listarParticipantes();
+	}
+
+
+	this.mostrarUnirAPartida=function(lista){
+		$('#mUAP').remove();
+		var cadena='<div id="mUAP">';
+		cadena=cadena+'<h3>Unirse a una Partida</h3>';
+		cadena=cadena+ '<div class="list-group">';
+		for(var i=0;i<lista.length;i++){
+			var maximo=lista[i].maximo
+			var numJugadores=maximo-(lista[i].huecos)
+ 			cadena=cadena+'<a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
+ 		}
+ 		cadena=cadena+'</div>';//cierra listGruop
+ 		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
+ 		cadena=cadena+'</div>';//cierra mUAP
+
+ 		$('#unirAPartida').append(cadena);
+
+ 		 var StoreValue = []; //Declare array
+	    $(".list-group a").click(function(){
+	        StoreValue = []; //clear array
+	        StoreValue.push($(this).attr("value")); // add text to array
+	    });
+
+
+ 		 $('#btnUnir').on('click',function(){
+		  	var nick=$('#nick').val();
+		  	var codigo=StoreValue[0];
+		  	$("#mUAP").remove();
+		  	if(codigo!=undefined && nick!=""){
+				ws.unirAPartida(codigo,nick);
+			}
+			else{
+				ws.listaPartidasDisponibles();
+			}
+
+		  });
+
+
+	}
+
+	
+	this.mostrarIniciarPartida=function(){
+		$('#mIP').remove();
+		var cadena='<div id="mostrarlaIP">';
+		cadena=cadena+'</div>';
+		cadena=cadena+'<button type="button" id="btnComenzar" class="btn btn-primary">Iniciar la Partida</button>';
+		cadena=cadena+'</div>';
+
+		$('#esperando').append(cadena);
+
+		$('#btnComenzar').on('click',function(){
+			ws.iniciarPartida();
+		});
+	}
+
 
 	this.mostrarListaPartidas=function(lista){
 
@@ -66,69 +137,9 @@ function ControlWeb($){
 	  }
 
 
-	this.mostrarEsperandoRival=function(){
-		this.limpiar();
-		//$('#mER').remove();
-		var cadena='<div id="mER"><h3>Esperando rival</h3>';
-		cadena=cadena+"<img src='cliente/img/loading.gif' class='img-responsive center-block'>";
-		if (ws.owner){
-			cadena=cadena+'<input type="button" class="btn btn-primary btn-md" id="iniciar" value="Iniciar partida">';    
-		}
-		cadena=cadena+'</div>';
-	    $('#esperando').append(cadena);
-	    $('#iniciar').click(function(){
-	    	ws.iniciarPartida();
-	    });
-	}
 
 
-	this.mostrarUnirAPartida=function(lista){
-		$('#mUAP').remove();
-		var cadena='<div id="mUAP">';
-		cadena=cadena+'<h3>Unirse a una Partida</h3>';
-		cadena=cadena+ '<div class="list-group">';
-		for(var i=0;i<lista.length;i++){
-			var maximo=lista[i].maximo
-			var numJugadores=maximo-(lista[i].huecos)
- 			cadena=cadena+'<a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
- 		}
- 		cadena=cadena+'</div>';//cierra listGruop
- 		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
- 		cadena=cadena+'</div>';//cierra mUAP
 
- 		$('#unirAPartida').append(cadena);
-
- 		 var StoreValue = []; //Declare array
-	    $(".list-group a").click(function(){
-	        StoreValue = []; //clear array
-	        StoreValue.push($(this).attr("value")); // add text to array
-	    });
-
-
- 		 $('#btnUnir').on('click',function(){
-		  	var nick=$('#nick').val();
-		  	var codigo=StoreValue[0];
-		  	$("#mUAP").remove();
-		  	ws.unirAPartida(nick,codigo);
-
-		  });
-
-
-	}
-
-	this.mostrarIniciarPartida=function(){
-		$('#mIP').remove();
-		var cadena='<div id="mostrarlaIP">';
-		cadena=cadena+'</div>';
-		cadena=cadena+'<button type="button" id="btnComenzar" class="btn btn-primary">Iniciar la Partida</button>';
-		cadena=cadena+'</div>';
-
-		$('#esperando').append(cadena);
-
-		$('#btnComenzar').on('click',function(){
-			ws.iniciarPartida();
-		});
-	}
 
 	this.mostrarListaJugadores=function(lista){
 	  	$('#mostrarListaEsperando').remove();
@@ -159,12 +170,9 @@ function ControlWeb($){
 		ws.listarParticipantes();
 	}
 
-	this.limpiar=function(){
-		$('#mUAP').remove();
-		$('#mCP').remove();
-		$('#mostrarListaPartidas').remove();
-		$('#mER').remove();
-		$('#mostrarListaEsperando').remove();
-	}
+	this.limpiarLog=function(){
+			$('#esperando').remove();
+			$('#uniendo').remove();
+		}
 
 }
