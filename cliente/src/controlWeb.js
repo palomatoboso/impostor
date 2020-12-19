@@ -4,12 +4,12 @@ function ControlWeb($){
 		var cadena='<div id ="mostrarCP">';
 		  cadena=cadena+'<div class="form-group">';
 		  cadena=cadena+'<h3>Crear Partida</h3>';
-		  cadena =cadena + '<label for="nick">Nick:</label>';
+		  cadena =cadena +'<label for="nick">Nick:</label>';
 		  cadena=cadena+'<input value ="player" type="text" class="form-control" id="nick" value="">';
 		  cadena=cadena+'</div>';
 		  cadena=cadena+'<div class="form-group">';
 		  cadena=cadena+'<label for="num">Numero:</label>';
-		  cadena=cadena+'<input value="4" type="text" class="form-control" id="num" min="4" max="10">';
+		  cadena=cadena+'<input value="4" type="number" class="form-control" id="num" min="4" max="10">';
 		  cadena=cadena+'</div>';
 		  cadena=cadena+'<button type="button" id"btnCrear" class="btn btn-primary">Crear Partida</button>';
 		  cadena=cadena+'</div>';
@@ -58,7 +58,7 @@ function ControlWeb($){
  			cadena=cadena+'<a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
  		}
  		cadena=cadena+'</div>';//cierra listGruop
- 		cadena=cadena+ '<button type="button" id"btnUnir" class="btn btn-primary">Unir a Partida</button>';
+ 		cadena=cadena+ '<button type="button" id="btnUnir" class="btn btn-primary">Unir a Partida</button>';
  		cadena=cadena+'</div>';//cierra mUAP
 
  		$('#unirAPartida').append(cadena);
@@ -141,7 +141,7 @@ function ControlWeb($){
 
 
 
-	this.mostrarListaJugadores=function(lista){
+	/*this.mostrarListaJugadores=function(lista){
 	  	$('#mostrarListaEsperando').remove();
 	  	var cadena='<div id="mostrarListaEsperando"><h3>Lista Jugadores</h3>';
 	  	cadena =cadena+'<ul class="list-group">';
@@ -150,7 +150,7 @@ function ControlWeb($){
 	  	}
 		cadena=cadena+'</ul></div>';
 		$('#listaEsperando').append(cadena);
-	}
+	}*/
 
 	this.mostrarParticipantes=function(lista){
 		$('#mP').remove();
@@ -170,9 +170,34 @@ function ControlWeb($){
 		ws.listarParticipantes();
 	}
 
+	this.actualizarPartidas=function(){
+    ws.listaPartidasDisponibles();
+ 	 }
+
+
 	this.limpiarLog=function(){
 			$('#esperando').remove();
 			$('#uniendo').remove();
 		}
 
+
+	this.mostrarModalSimple=function(msg){
+		$('#avisarImpostor').remove();
+		var cadena="<p id='avisarImpostor'>"+msg+'</p>';
+		$("#contenidoModal").append(cadena);
+		$('#modalGeneral').modal("show");
+	}	
+
+	this.mostrarModalTarea=function(tarea){
+		$('#avisarImpostor').remove();
+		//poner gif animado 
+		$('#tarea').remove();
+		var cadena="<p id='tarea'>"+tarea+'</p>';
+		$("#contenidoModal").append(cadena);
+		$('#modalGeneral').modal("show");
+
+	}
 }
+
+
+

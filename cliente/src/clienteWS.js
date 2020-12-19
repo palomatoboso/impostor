@@ -4,6 +4,8 @@ function ClienteWS(){
 	this.codigo=undefined;
 	this.numJugador=undefined;
 	this.impostor;
+	this.estado;
+	this.encargo;
 
 	this.ini=function(){
 		this.socket=io.connect();
@@ -46,8 +48,7 @@ function ClienteWS(){
 		this.socket.emit("atacar",this.codigo,this.nick,atacado);
 	}
 	this.movimiento=function(direccion,x,y){
-		var datos={nick:this.nick,codigo:this.codigo, numJugador:this.numJugador,direccion:direccion,x:x, y:y};
-		this.socket.emit("movimiento",datos);
+		this.socket.emit("movimiento",this.nick,this.codigo,this.numJugador,direccion,x,y);
 	}
 
 	this.listarParticipantes=function(){
@@ -55,12 +56,8 @@ function ClienteWS(){
 	}
 
 	this.realizarTarea=function(){
-		this.socket.emit("realizarTarea",this.nick,this.codigo);
+		this.socket.emit("realizarTarea",this.codigo, this.nick, this.encargo);
 	}
-	/*this.ini=function(){
-		this.socket=io.connect();
-		this.lanzarSocketSrv();
-	}*/
 
 	//Servidor de WS dentro del cliente
 	this.lanzarSocketSrv=function(){
@@ -76,6 +73,7 @@ function ClienteWS(){
 				cw.mostrarEsperandoRival();
 				cw.mostrarIniciarPartida();
 				cli.numJugador=0;
+				cli.estado="vivo";
 				
 			}
 		});
@@ -83,6 +81,7 @@ function ClienteWS(){
 			cli.codigo=data.codigo;
 			cli.nick = data.nick;
 			cli.numJugador = data.numJugador;
+			cli.estado="vivo";
 			console.log(data);
 			cw.mostrarEsperandoRival();
 		});
@@ -108,8 +107,11 @@ function ClienteWS(){
 		this.socket.on('recibirListaPartidas',function(lista){
 			console.log(lista);
 		});
-		this.socket.on('votacion',function(data){
-			console.log(data);
+		this.socket.on('votacion',function(fase){
+			console.log(fase);
+			if(fase=="votacion"){
+				$('#avisarVotacion').modal("show");
+			}
 		});
 		this.socket.on('comprobarFinalVotacion',function(data){
 			console.log(data);
@@ -120,16 +122,23 @@ function ClienteWS(){
 		this.socket.on('recibirEncargo',function(data){
 			console.log(data);
 			cli.impostor=data.impostor;
-			if(data.impostor){
-				$('#avisarImpostor').modal("show");
+			cli.encargo= data.encargo;
+			if(cli.impostor){
+				//$('#avisarImpostor').modal("show");
+				cw.mostrarModalSimple('eres el impostor a por ellos!');
 				//crearColision();
 			}
 		});
 		this.socket.on('final',function(data){
 			console.log(data);
+			finPartida(data.Ganadores);
 		});
 		this.socket.on('muereInocente',function(inocente){
 			console.log('muere '+inocente);
+			if(cli.nick==inocente){
+				cli.estado="muerto";
+			}
+			dibujarInocenteMuerto(inocente);
 		});
 		this.socket.on('recibirListaParticipantes',function(lista){
 			console.log(lista);
@@ -147,9 +156,16 @@ function ClienteWS(){
 		this.socket.on('moverRemoto',function(datos){
 			mover(datos);
 		});
-		this.socket.on('realizarTarea',function()){
-			
-		}
+		this.socket.on('tareaRealizada',function(data){
+			console.log(data);
+
+		});
+		this.socket.on("hasAtacado",function(fase){
+			if(fase=="jugando"){
+				ataquesOn=true;
+			}
+		});
+	
 		
 	}
 
@@ -163,9 +179,9 @@ function pruebasWS(){
 	ws4=new ClienteWS();
 	var codigo=ws.codigo;
 
-	ws2.unirAPartida("palomaT",codigo);
-	ws3.unirAPartida("palomaToboso",codigo);
-	ws4.unirAPartida("Saiz", codigo);
+	ws2.unirAPartida(codigo, "palomaT");
+	ws3.unirAPartida(codigo, "palomaToboso");
+	ws4.unirAPartida(codigo, "Saiz");
 
 	//ws.iniciarPartida();
 }

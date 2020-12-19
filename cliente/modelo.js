@@ -41,6 +41,7 @@ this.obtenerCodigo=function(){
 	}
 	return codigo.join('');
 }
+
 }
 
 ///////////////////FUNCION PARTIDAS ////////////
@@ -388,7 +389,7 @@ function Votacion(){
 		partida.puedeQuitarAlMasVotado();
 	}
 	this.skiper=function(usr){
-		usr.estado.skipr(usr);
+		usr.estado.skiper(usr);
 	} 
 }
 
@@ -481,11 +482,11 @@ function Vivo(){
 	this.esAtacado=function(atacado){
 		atacado.estado = new Muerto();
 	}
-	this.votar=function(nick,partida){
+	this.votar=function(atacado){
 		partida.votar(nick);
 	}
 	this.haVotado=function(votado){
-		partida.votos ++;
+		partida.votos++;
 	}
 	this.enviarVotacion=function(usuario){
 		usuario.permiteEnviarVotacion(this);

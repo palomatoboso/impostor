@@ -1,4 +1,4 @@
-var modelo=require("./modelo");
+var modelo=require("./modelo.js");
 
 function ServidorWS(){
 
@@ -39,7 +39,9 @@ function ServidorWS(){
 		    		var owner=juego.partidas[codigo].nickOwner;
 		    		console.log('usuario: '+res.nick+" se une a partida: "+res.codigo);
 		    		cli.enviarRemitente(socket,"unidoAPartida",res);
-				cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",nick);
+					cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",nick);
+					var lista = juego.listarPartidasDisponibles();
+					cli.enviarGlobal(socket,"recibirListaPartidasDisponibles",lista);	 
 		    	});
 
 			socket.on('iniciarPartida', function(codigo, nick){
@@ -92,6 +94,11 @@ function ServidorWS(){
 				}
 				
 			});
+				socket.on('lanzarVotacion', function(codigo, nick) {
+				juego.lanzarVotacion(codigo,nick);
+				var fase=juego.partidas[codigo].fase.nombre;
+				cli.enviarATodos(io,codigo,"votacion",fase);
+			});
 
 			socket.on("votar",function(codigo,nick,sospechoso){
 				var partida=juego.partidas[codigo];
@@ -115,9 +122,10 @@ function ServidorWS(){
 				var partida=juego.partidas[codigo];
 				var fase= partida.fase.nombre;
 				cli.enviarATodos(io,codigo,"muereInocente",inocente);
-				if (fase== "final"){
-					
-					cli.enviarATodos(io,codigo,"final","ganan impostores");
+				cli.enviarRemitente(socket,"hasAtacado",fase);
+				if (partida.fase.nombre== "final"){
+					var data={"Fase":partida.fase.nombre,"Ganadores":partida.fase.ganadores};
+					cli.enviarATodos(io,codigo,"final",data);
 				}
 
 		});
@@ -133,16 +141,23 @@ function ServidorWS(){
 				var lista = juego.obtenerListaJugadores(codigo);
 				cli.enviarRemitente(socket,"dibujarRemoto", lista);       
 			});
-			socket.on('movimiento', function(codigo, nick, numJugador, x,y) {
-				var datos ={nick:nick,numJugador:numJugador,x:x,y:y};
+			socket.on('movimiento', function( nick,codigo, numJugador,direccion, x,y) {
+				var datos ={direccion:direccion, nick:nick,numJugador:numJugador,x:x,y:y};
 				cli.enviarATodosMenosRemitente(socket,codigo,"moverRemoto",datos);
 			});
 
-			socket.on('realizarTarea',function(nick,codigio){
+			socket.on('realizarTarea',function(codigo, nick, encargo){
+				res = juego.realizarTarea(codigo,nick);
 				var partida=juego.partidas[codigo];
-				juego.realizarTarea(nick,codigo);
-				var fase=partida.fase.nombre;
-				//falta1 cosa
+				if (partida.fase.nombre == "final"){
+					var data={"Fase":partida.fase.nombre,"Ganadores":partida.fase.ganadores};
+					cli.enviarATodos(io,codigo,"final",data);
+				}
+				//porcentaje 
+				percentGlobal = juego.obtenerPercentGlobal(codigo);
+				percentLocal = juego.obtenerPercentTarea(codigo, nick);
+				var datos = {percentGlobal:percentGlobal, percentLocal:percentLocal}
+				cli.enviarRemitente(socket,"realizandoTarea", datos);
 			});
 	});
 

@@ -35,16 +35,24 @@
   let cursors;
   let player;
   let player2;
-  var jugadores={};//la coleccion de jugadores remotos
+  var jugadores=[];//la coleccion de jugadores remotos
   let map;
   var worldLayer;
   var crear;
   let camera;
   var spawnPoint;
+  var capaTareas;
+  var tareasOn=true;
   //en el caso de tener una hoja con muchos:
   var recursos=[{ frame:0, sprite: "ana"}, { frame:3, sprite:"tom"}, { frame:9, sprite:"loi"}];
   let showDebug = false;
   var remotos;  
+  var muertos;
+  var followText;
+  var followTextRemoto=[];
+  var followTextRemotoMuerto;
+  var ataquesOn=true;
+  var final=false;
 
   function preload() {
     this.load.image("tiles", "cliente/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -60,34 +68,38 @@
 
     //repetir esto por cada personaje diferente o usar una hoja con 10 personajes 
     //en el caso de tener muchos personajes en una hoja
-     this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:24,frameHei‌ght:26});‌ 
+    this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:24,frameHei‌ght:26});‌ 
     this.load.spritesheet("muertos1","cliente/assets/images/muertos1.png",{frameWidth:24,frameHei‌ght:26});‌ 
     this.load.spritesheet("muertos2","cliente/assets/images/muertos2.png",{frameWidth:24,frameHei‌ght:26});‌ 
   }
 
   function create() {
     crea=this;
-    const map = this.make.tilemap({ key: "map" });
+     map = crear.make.tilemap({ key: "map" });
 
     // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
     // Phaser's cache (i.e. the name you used in preload)
     const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
+    const decoracion = map.createStaticLayer("decoracion", tileset, 0, 0);
     const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
     worldLayer = map.createStaticLayer("World", tileset, 0, 0);
+    capaTareas = map.createStaticLayer("capaTareas", tileset, 0, 0);
     const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
 
     worldLayer.setCollisionByProperty({ collides: true });
+    capaTareas.setCollisionByProperty({ collides: true });
 
     // By default, everything gets depth sorted on the screen in the order we created things. Here, we
     // want the "Above Player" layer to sit on top of the player, so we explicitly give it a depth.
     // Higher depths will sit on top of lower depth objects.
     aboveLayer.setDepth(10);
+    decoracion.setDepth(11);
 
     // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
     // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-    var spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+    spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
     // Create a sprite with physics enabled via the physics system. The image used for the sprite has
     // a bit of whitespace, so I'm using setSize & setOffset to control the size of the player's body.
@@ -497,45 +509,59 @@
 
       cursors = crear.input.keyboard.createCursorKeys();
       remotos=crear.add.group();
+      muertos = crear.add.group();
       teclaA=crear.input.keyboard.addKey('a');
-      lanzarJugador(ws.numJugador);
+      teclaV=crear.input.keyboard.addKey('v');
+      teclaT=crear.input.keyboard.addKey('t');
+      lanzarJugador(ws.nick,ws.numJugador,ws.numJugador);
       ws.estoyDentro();
 
   }
 
   function tareas(sprite,objeto){
     if(ws.encargo==objeto.properties.tarea && teclaT.isDown){
+     tareasOn=false;
       console.log("realizar tarea"+ws.encargo);
-      ws.realizarTarea();
+     // ws.realizarTarea();//o hacer la llamada dentro del control web
+      cw.mostrarModalTarea(ws.encargo);
     }
   }
 
-  function lanzarJugador(numJugador){
+  function lanzarJugador(nick,numJugador){
+    var x=spawnPoint.x+numJugador*24+2;
       player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
       // Watch the player and worldLayer for collisions, for the duration of the scene:
       crear.physics.add.collider(player, worldLayer);
+       crear.physics.add.collider(player,capaTareas, tareas,()=>{return tareasOn});
       //crear.physics.add.collider(player2, worldLayer);
+      jugadores[nick] = player;
+      jugadores[nick].nick = nick;
+      jugadores[nick].numJugador = numJugador;
       camera = crear.cameras.main;
       camera.startFollow(player);
       camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+      camera.setZoom(2);
+      //camera.setSize(200);
+      this.followText = crear.add.text(0, 0, jugadores[nick].nick);
+
     }
 
 
   function lanzarJugadorRemoto(nick, numJugador){
+    var x=spawnPoint.x+numJugador*24+2;
     var frame=recursos[numJugador].frame;
-    var punto={x:310,y:1185};
-    if(!jugadores[nick] && crear){
-      jugadores[nick]=crear.physics.add.sprite(punto.x, punto.y,"varios",frame);
-      jugadores[nick].nick=nick;
-      jugadores[nick].numJugador=numJugador;
-      crear.physics.add.collider(jugadores[nick], worldLayer);
-      remotos.add(jugadores[nick]);
-    }
+   jugadores[nick]=crear.physics.add.sprite(x, spawnPoint.y,"varios",frame);   
+    crear.physics.add.collider(jugadores[nick], worldLayer);
+    jugadores[nick].nick = nick;
+    jugadores[nick].numJugador = numJugador;
+    remotos.add(jugadores[nick]);
+    this.followTextRemoto[numJugador] = crear.add.text(0, 0, jugadores[nick].nick);
+    
   }
     
      function crearColision(){
         if(crear && ws.impostor){
-          crear.physics.add.overlap(player,remotos,kill)
+          crear.physics.add.overlap(player,remotos,kill,()=>{return ataquesOn});
         }
      }
 
@@ -544,11 +570,34 @@
       //avisar al servidor
       var nick=inocente.nick;
       //console.log("atacando a"+nick);
+      
        if(teclaA.isDown){
         //console.log('muere inocente');
+        ataquesOn=false;
         ws.atacar(nick);
         }
     }
+
+    function dibujarInocenteMuerto(inocente){
+      var x=jugadores[inocente].x;
+      var y =jugadores[inocente].y;
+      var numJugador=jugadores[inocente].numJugador;
+
+      var muerto=crear.physics.add.sprite(x,y,"muertos", recursos[numJugador].frame);
+      muertos.add(muerto);
+      crear.physics.add.overlap(player,muertos,votacion);
+    }
+
+    function votaciones(sprite, muerto){
+      if(teclaV.isDown){
+        ws.echarVotacion();
+      }
+    }
+
+ 
+
+
+
 
   function mover(datos){
 
@@ -559,9 +608,10 @@
     var y= datos.y;
     var remoto=jugadores[nick];
     const speed = 175;
+
      // const prevVelocity = player.body.velocity.clone();
       const nombre=recursos[numJugador].sprite;
-     if (remoto){
+     if (remoto && !final){
     
         remoto.body.setVelocity(0);
         remoto.setX(x);
@@ -624,12 +674,19 @@
     }
   }
 */
+
+  function finPartida(data){
+    final=true;
+    //remoto=undefined;
+    cw.mostrarModalSimple("Fin de la Partida"+data);
+  }
   function update(time, delta) {
+
        const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
       var direccion= "stop";
     const nombre=recursos[ws.numJugador].sprite;
-
+    if(!final){
     // Stop any previous movement from the last frame
     player.body.setVelocity(0);
     //player2.body.setVelocity(0);
@@ -672,6 +729,7 @@
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
     }
+  }
 
 
 }

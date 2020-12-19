@@ -61,7 +61,7 @@ app.get('/listaPartidasDisponibles',function(request,response){
 });
 
 
-server.listen(app.get('port'), function() {
+server.listen(app.get('port'), function(){
     console.log('Node esta ecuchando en el puerto', app.get('port'));
 });
 
