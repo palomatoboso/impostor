@@ -248,11 +248,7 @@ describe("El juego del impostor", function() {
                 expect(partida.fase.nombre).toEqual("final");
                 expect(partida.fase.ganadores).toEqual("impostores");
               })
-              //it "realizar tareas", function(){
-                //var partida=juego.partidas[codigo];
-                //for(var i=0; )
-              //}
-
+      
               it("Ataca el impostor y mata a todos",function(){
                 var partida=juego.partidas[codigo];
                 partida.usuarios[nick].impostor=true;
@@ -269,23 +265,23 @@ describe("El juego del impostor", function() {
                 expect(partida.fase.ganadores).toEqual("impostores");
               })
 
-             /* it("realizar tareas",function(){
-        var partida=juego.partidas[codigo];
-        expect(partida.obtenerPercentGlobal()).toEqual(25);
-        for(var i=0;i<9;i++){
-          for(var key in partida.usuarios){
-            partida.usuarios[key].realizarTarea();
-          }
-          expect(partida.fase.nombre).toEqual("jugando");
-          expect(partida.obtenerPercentGlobal()).toEqual(25+(i+1)*75/10);
-        }
-        for(var key in partida.usuarios){
-            partida.usuarios[key].realizarTarea();
-        }
-        expect(partida.obtenerPercentGlobal()).toEqual(100);
-        expect(partida.fase.nombre).toEqual("final");
-        expect(partida.fase.ganadores).toEqual("ciudadanos");
-      })*/
+              it("realizar tareas",function(){
+                    var partida=juego.partidas[codigo];
+                    expect(partida.obtenerPercentGlobal()).toEqual(25);
+                    for(var i=0;i<9;i++){
+                      for(var key in partida.usuarios){
+                        partida.usuarios[key].realizarTarea();
+                      }
+                      expect(partida.fase.nombre).toEqual("jugando");
+                      expect(partida.obtenerPercentGlobal()).toEqual(25+(i+1)*75/10);
+                    }
+                    for(var key in partida.usuarios){
+                        partida.usuarios[key].realizarTarea();
+                    }
+                    expect(partida.obtenerPercentGlobal()).toEqual(100);
+                    expect(partida.fase.nombre).toEqual("final");
+                    expect(partida.fase.ganadores).toEqual("ciudadanos");
+             })
 
          });
 
