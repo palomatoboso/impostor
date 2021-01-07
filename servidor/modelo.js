@@ -3,8 +3,8 @@
 ///////////////////FUNCION JUEGO ////////////
 function Juego(min){
 	this.min=min;
-this.partidas={};
-this.numeroValido=function(num) {
+	this.partidas={};
+	this.numeroValido=function(num) {
 		if(!(num<this.min || num>10)){
 			return true;
 		}else{
