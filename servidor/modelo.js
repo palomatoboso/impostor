@@ -317,7 +317,7 @@ function Partida(num,owner,codigo, juego){
 		this.usuarios[nick].esVotado();
 		this.comprobarVotacion();
 	}
-	this.recuentoMasVotado=function(){
+	this.jugadorMasVotado=function(){
 		var votos = 0;
 		var masVotado="No hay nadie mas votado";
 		for(var usr in this.usuarios){

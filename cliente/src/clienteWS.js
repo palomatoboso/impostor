@@ -69,7 +69,7 @@ function ClienteWS(){
 		this.socket.on('partidaCreada', function(data){
 			cli.codigo=data.codigo;
 			console.log(data);
-			if(data.codigo!="fallo"){
+			if(data.codigo!="Error"){
 				cw.mostrarEsperandoRival();
 				cw.mostrarIniciarPartida();
 				cli.numJugador=0;
@@ -169,7 +169,7 @@ function ClienteWS(){
 		
 	}
 
-		this.ini();
+	this.ini();
 }
 
 var ws2,ws3,ws4;
