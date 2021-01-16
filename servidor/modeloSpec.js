@@ -6,7 +6,7 @@ describe("El juego del impostor", function() {
       var nick;
 
       beforeEach(function() {
-          juego = new modelo.Juego(4);
+          juego = new modelo.Juego(4, "test");
           //usr = new modelo.Usuario("pepe",juego);
           nick="pepe";
       });
@@ -18,10 +18,10 @@ describe("El juego del impostor", function() {
       });
 
       it("Comprobar los valores de la partida", function() {
-          codigo=juego.crearPartida(3, nick);
-          expect(codigo).toEqual("Error");
+          codigo=juego.crearPartida(1, nick);
+          expect(codigo).toEqual("fallo");
           codigo=juego.crearPartida(11, nick);
-          expect(codigo).toEqual("Error");
+          expect(codigo).toEqual("fallo");
       });
 
       describe("cuando el usuario pepe crea una partida de 4 jugadores", function() {
@@ -267,13 +267,13 @@ describe("El juego del impostor", function() {
 
               it("realizar tareas",function(){
                     var partida=juego.partidas[codigo];
-                    expect(partida.obtenerPercentGlobal()).toEqual(25);
-                    for(var i=0;i<9;i++){
+                    expect(partida.obtenerPercentGlobal()).toEqual();
+                    for(var i=0;i<9;i++){//10 tareas como max
                       for(var key in partida.usuarios){
                         partida.usuarios[key].realizarTarea();
                       }
                       expect(partida.fase.nombre).toEqual("jugando");
-                      expect(partida.obtenerPercentGlobal()).toEqual(25+(i+1)*75/10);
+                      expect(partida.obtenerPercentGlobal()).toEqual(((i+1)*100)/10);
                     }
                     for(var key in partida.usuarios){
                         partida.usuarios[key].realizarTarea();

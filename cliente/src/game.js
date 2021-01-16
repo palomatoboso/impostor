@@ -35,7 +35,7 @@
   let cursors;
   let player;
   //let player2;
-  var jugadores=[];//la coleccion de jugadores remotos
+  var jugadores={};//la coleccion de jugadores remotos
   let map;
   var worldLayer;
   var crear;
@@ -43,6 +43,9 @@
   var spawnPoint;
   var capaTareas;
   var tareasOn=true;
+  var teclaT;
+  var teclaA;
+  var teclaV;
   //en el caso de tener una hoja con muchos:
   var recursos=[{frame:0, sprite:"ana"}, {frame:3, sprite:"tom"}, {frame:9, sprite:"loi"}];
   let showDebug = false;
@@ -58,9 +61,10 @@
     this.load.image("tiles", "cliente/assets/tilesets/tuxmon-sample-32px-extruded.png");
     this.load.tilemapTiledJSON("map", "cliente/assets/tilemaps/tuxemon-town.json");
 
-    this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:24,frameHei‌ght:43});‌ 
-    this.load.spritesheet("muertos1","cliente/assets/images/muertos1.png",{frameWidth:24,frameHei‌ght:26});‌ 
-    this.load.spritesheet("muertos2","cliente/assets/images/muertos2.png",{frameWidth:24,frameHei‌ght:26});‌ 
+
+    this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:32,frameHeight:32});
+    this.load.spritesheet("muertos1","cliente/assets/images/muertos1.png",{frameWidth:32,frameHeight:34});
+    this.load.spritesheet("muertos2","cliente/assets/images/muertos2.png",{frameWidth:32,frameHeight:34}); 
   }
 
   function create(){
@@ -105,52 +109,39 @@
 
           //animacion del personaje
           //CREAR UNA ANIMACION POR CADA PERSONAJE
+  //----------------------------PERSONAJE 1 LUCAS-------------------------------------
 
-
-          //----------------------------PERSONAJE 1 LUCAS-------------------------------------
           const anims1 = crear.anims;
                 anims1.create({
                   key: "lucas-left-walk",
                   frames: anims1.generateFrameNames("lucas", {
-                    //prefix: "misa-left-walk.",
                     start: 3,
                     end: 5,
-                    //zeroPad: 3
                   }),
-                  //frameRate: 10,
                   repeat: -1
                 });
                 anims1.create({
                   key: "lucas-right-walk",
                   frames: anims1.generateFrameNames("lucas", {
-                    //prefix: "misa-left-walk.",
                     start: 6,
                     end: 8,
-                    //zeroPad: 3
                   }),
-                  //frameRate: 10,
                   repeat: -1
                 });
                 anims1.create({
                   key: "lucas-front-walk",
                   frames: anims1.generateFrameNames("lucas", {
-                    //prefix: "misa-left-walk.",
                     start: 0,
                     end: 2,
-                    //zeroPad: 3
                   }),
-                  //frameRate: 10,
                   repeat: -1
                 });
                 anims1.create({
                   key: "lucas-back-walk",
                   frames: anims1.generateFrameNames("lucas", {
-                    //prefix: "misa-left-walk.",
                     start: 9,
                     end: 11,
-                    //zeroPad: 3
                   }),
-                  //frameRate: 10,
                   repeat: -1
                 });
 
@@ -493,6 +484,7 @@
 
         
 
+
          // const camera = this.cameras.main;
           //camera.startFollow(player);
           //camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -520,8 +512,8 @@
   }
 
   function lanzarJugador(nick,numJugador){
-    var x=spawnPoint.x+numJugador*24+2;
-      player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
+    var x=spawnPoint.x+numJugador*32+2;
+      player = crear.physics.add.sprite(x, spawnPoint.y,"varios",recursos[numJugador].frame);    
       // Watch the player and worldLayer for collisions, for the duration of the scene:
       crear.physics.add.collider(player, worldLayer);
        crear.physics.add.collider(player,capaTareas, tareas,()=>{return tareasOn});
@@ -540,9 +532,9 @@
 
 
   function lanzarJugadorRemoto(nick, numJugador){
-    var x=spawnPoint.x+numJugador*24+2;
+    var x=spawnPoint.x+numJugador*32+2;
     var frame=recursos[numJugador].frame;
-   jugadores[nick]=crear.physics.add.sprite(x, spawnPoint.y,"varios",frame);   
+   jugadores[nick]=crear.physics.add.sprite(x+15*numJugador, spawnPoint.y,"varios",frame);   
     crear.physics.add.collider(jugadores[nick], worldLayer);
     jugadores[nick].nick = nick;
     jugadores[nick].numJugador = numJugador;
@@ -580,7 +572,7 @@
       crear.physics.add.overlap(player,muertos,votacion);
     }
 
-    function votaciones(sprite, muerto){
+    function votacion(sprite, muerto){
       if(teclaV.isDown){
         ws.echarVotacion();
       }

@@ -83,7 +83,9 @@ function ClienteWS(){
 			cli.numJugador = data.numJugador;
 			cli.estado="vivo";
 			console.log(data);
+			if(data.nickJugador != "fallo" && data.codigo != null) {
 			cw.mostrarEsperandoRival();
+			}
 		});
 		this.socket.on('nuevoJugador',function(nick){
 			console.log(nick+"se une a la partida");
@@ -107,14 +109,16 @@ function ClienteWS(){
 		this.socket.on('recibirListaPartidas',function(lista){
 			console.log(lista);
 		});
-		this.socket.on('votacion',function(fase){
-			console.log(fase);
+		this.socket.on('votacion',function(lista){
+			console.log(lista);
 			if(fase=="votacion"){
 				$('#avisarVotacion').modal("show");
 			}
 		});
 		this.socket.on('comprobarFinalVotacion',function(data){
 			console.log(data);
+			$('#modalGeneral').modal('toggle');
+			cw.mostrarModalSimple("La votacion ha acabado Elegido:"+data.elegido+"En la Fase:"+data.fase);
 		});
 		this.socket.on('haVotado',function(data){
 			console.log(data);
@@ -125,7 +129,7 @@ function ClienteWS(){
 			cli.encargo= data.encargo;
 			if(cli.impostor){
 				//$('#avisarImpostor').modal("show");
-				cw.mostrarModalSimple('eres el impostor a por ellos!');
+				cw.mostrarModalSimple('ERES EL IMPOSTOR A POR ELLOSSS!');
 				//crearColision();
 			}
 		});
@@ -153,8 +157,8 @@ function ClienteWS(){
 			}
 			crearColision();
 		});
-		this.socket.on('moverRemoto',function(datos){
-			mover(datos);
+		this.socket.on('moverRemoto',function(data){
+			mover(data);
 		});
 		this.socket.on('tareaRealizada',function(data){
 			console.log(data);
