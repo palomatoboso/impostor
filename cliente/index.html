@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html lang="es-Es">
-<head>
-<title>Impostor</title>
-
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="cliente/lib/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>               
+<html>
+<head>
+	<title>Impostor</title>
 
 
-<script src="cliente/lib/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="cliente/lib/bootstrap.min.css">
+	<script src="cliente/lib/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 
-<script src="cliente/src/clienteRest.js"></script>
-<script src="cliente/src/clienteWS.js"></script>
-<script src="cliente/src/controlWeb.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
-<script src="cliente/src/game.js"></script>
+	<script src="cliente/src/clienteRest.js"></script>
+	<script src="cliente/src/clienteWS.js"></script>
+	<script src="cliente/src/controlWeb.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
+	<script src="cliente/src/game.js"></script>
 
- <style>
-        body, html {
-            height: 100%;
-           
-            margin: 0;
-        }
-        
-        .bg {
-            /* The image used */
-            background-image: url("cliente/img/amongusfondo.jpg");
-        
-            /* Full height */
-            height: 100%;
-            
-            /* Center and scale the image nicely */
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-    </style>
+	 <style>
+	        body, html {
+	            height: 100%;
+	           
+	            margin: 0;
+	        }
+	        
+	        .bg {
+	            /* The image used */
+	            background-image: url("cliente/img/amongusfondo.jpg");
+	        
+	            /* Full height */
+	            height: 100%;
+	            
+	            /* Center and scale the image nicely */
+	            background-position: center;
+	            background-repeat: no-repeat;
+	            background-size: cover;
+	        }
+	    </style>
 </head>
 
 <body>
@@ -50,12 +49,14 @@
 			<div class="col-sm-6">
 	      	<div id="crearPartida"></div>
 	      	<div id="unirAPartida"></div>
-  		    <div id="esperando"></div>
+  		    
 	    </div>
 	</div>
 
 	<div class="row">
   		<div class="col-sm-6" id="esperando"> </div>
+  		&nbsp;
+  		<div class= 'col-sm-6' id="abandonarPartida"></div>
   		<div class="col-sm-6" id="uniendo"> </div>
   	</div>
   	<div class="row">

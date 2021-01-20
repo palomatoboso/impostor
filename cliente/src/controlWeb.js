@@ -32,6 +32,11 @@ function ControlWeb($){
 		
 
 	}
+
+
+	this.inicio = function() {
+        location.reload();
+    }
 	
 	this.mostrarEsperandoRival=function(lista){
 		$('#mER').remove();
@@ -65,7 +70,7 @@ function ControlWeb($){
 		for(var i=0;i<lista.length;i++){
 			var maximo=lista[i].maximo
 			var numJugadores=maximo-(lista[i].huecos)
- 			cadena=cadena+'<a href="#" value=" ' +lista[i].codigo+ ' " class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
+ 			cadena=cadena+'<a href="#" value="' +lista[i].codigo+ '" class="list-group-item">'+lista[i].codigo+'Host: '+lista[i].owner+' <span class="badge">'+numJugadores+'/'+maximo+'</span></a>';
  		}
  		cadena=cadena+'</div>';//cierra listGruop
  		cadena=cadena+ '<button type="button" id="btnUnir" class="btn btn-primary">Unir a Partida</button>';
@@ -114,7 +119,7 @@ function ControlWeb($){
 	}
 
 
-	this.mostrarListaPartidas=function(lista){
+	/*this.mostrarListaPartidas=function(lista){
 
 	    $('#mostrarListaPartidas').remove();
 	    var cadena='<div id="mostrarListaPartidas"><h3>Elegir partida</h3>';
@@ -146,19 +151,8 @@ function ControlWeb($){
 	            ws.unirAPartida(nick,codigo);
 	          }
 	    });
-	  }
+	  }*/
 
-
-	this.mostrarListaJugadores=function(lista){
-	  	$('#mostrarListaEsperando').remove();
-	  	var cadena='<div id="mostrarListaEsperando"><h3>Lista Jugadores</h3>';
-	  	cadena =cadena+'<ul class="list-group">';
-	  	 for(var i=0;i<lista.length;i++){
-	  		cadena=cadena+'<li class="list-group-item">'+lista[i].nick+'</li>';
-	  	}
-		cadena=cadena+'</ul></div>';
-		$('#listaEsperando').append(cadena);
-	}
 
 	this.mostrarParticipantes=function(lista){
 		$('#mP').remove();
@@ -181,6 +175,22 @@ function ControlWeb($){
 	this.actualizarPartidas=function(){
     ws.listaPartidasDisponibles();
  	 }
+
+ 	 this.mostrarAbandonarPartida = function() {
+        $('#mostrarAbandonarPartida').remove();
+
+        var cadena = '<div id = "mostrarAbandonarPartida">';
+        cadena = cadena + '<button type="button" class="btn btn-success" id="btnAbandonar">Abandonar Partida</button>';
+        cadena = cadena + '</div>';
+
+        $('#abandonarPartida').append(cadena);
+
+        $('#btnAbandonar').on('click', function() {
+            $('#mER').remove();
+            $('#nuevosJugadores').remove();
+            ws.abandonarPartida();
+        });
+    }
 
 
 	this.limpiarLog=function(){
@@ -209,8 +219,8 @@ function ControlWeb($){
 		this.limpiarModal();
 		$('#avisarImpostor').remove();
 		//poner gif animado 
-		cadena=cadena+"<img src='cliente/img/avisarimpostor.gif' class='img-responsive center-block'>";
-		$('#tarea').remove();
+		//cadena=cadena+"<img src='cliente/img/avisarimpostor.gif' class='img-responsive center-block'>";
+		//$('#tarea').remove();
 		var cadena="<p id='tarea'>"+tarea+'</p>';
 		$("#contenidoModal").append(cadena);
 		$("#pie").append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');

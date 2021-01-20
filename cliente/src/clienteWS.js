@@ -3,6 +3,7 @@ function ClienteWS(){
 	this.nick=undefined;
 	this.codigo=undefined;
 	this.numJugador=undefined;
+	//this owner=false;
 	this.impostor;
 	this.estado;
 	this.encargo;
@@ -17,7 +18,8 @@ function ClienteWS(){
 		this.socket.emit("crearPartida", nick,numero);//{"nick":nick,"numero":numero}
 	}
 	this.unirAPartida=function(codigo,nick){
-		this.nick=nick;
+		//this.nick=nick;
+		
 		this.socket.emit("unirAPartida",codigo, nick);
 	}
 	this.iniciarPartida=function(){
@@ -42,21 +44,27 @@ function ClienteWS(){
 		this.socket.emit("votar",this.codigo,this.nick,sospechoso);
 	}
 	this.obtenerEncargo=function(){
-		this.socket.emit("obtenerEncargo",this.codigo,this.nick);
+		this.socket.emit("obtenerEncargo",this.codigo,this.nick,this.encargo);
 	}
 	this.atacar=function(atacado){
 		this.socket.emit("atacar",this.codigo,this.nick,atacado);
 	}
 	this.movimiento=function(direccion,x,y){
-		this.socket.emit("movimiento",this.nick,this.codigo,this.numJugador,direccion,x,y);
+		var datos = {nick:this.nick, codigo:this.codigo, numJugador:this.numJugador, estado:this.estado, direccion:direccion, x:x, y:y};
+		this.socket.emit("movimiento", datos);
 	}
 
 	this.listarParticipantes=function(){
 		this.socket.emit("listarParticipantes", this.codigo);
 	}
+	this.abandonarPartida=function(){
+		this.socket.emit("abandonarPartida", this.codigo, this.nick);
+
+	}
 
 	this.realizarTarea=function(){
-		this.socket.emit("realizarTarea",this.codigo, this.nick, this.encargo);
+		var datos={codigo:this.codigo, nick:this.nick};
+		this.socket.emit("realizarTarea",datos);
 	}
 
 	//Servidor de WS dentro del cliente
@@ -72,6 +80,8 @@ function ClienteWS(){
 			if(data.codigo!="Error"){
 				cw.mostrarEsperandoRival();
 				cw.mostrarIniciarPartida();
+				cw.mostrarAbandonarPartida();
+				//cli.owner=true;
 				cli.numJugador=0;
 				cli.estado="vivo";
 				
@@ -85,6 +95,7 @@ function ClienteWS(){
 			console.log(data);
 			if(data.nickJugador != "fallo" && data.codigo != null) {
 			cw.mostrarEsperandoRival();
+			cw.mostrarAbandonarPartida();
 			}
 		});
 		this.socket.on('nuevoJugador',function(nick){
@@ -92,13 +103,14 @@ function ClienteWS(){
 			cw.actualizarJugadores();
 		});
 		this.socket.on('esperando',function(fase){
-			console.log("esperando:"+fase);
+			console.log("esperando: "+fase);
 		});
 		this.socket.on('partidaIniciada',function(fase){
-			console.log("Partida esta en fase:"+fase);
+			cli.obtenerEncargo();
+			console.log("Partida esta en fase:"+fase); 
 			lanzarJuego();
 			cw.limpiarLog();
-			cli.obtenerEncargo();
+			
 		});
 		this.socket.on('recibirListaPartidasDisponibles',function(lista){
 			console.log(lista);
@@ -109,16 +121,29 @@ function ClienteWS(){
 		this.socket.on('recibirListaPartidas',function(lista){
 			console.log(lista);
 		});
+		this.socket.on('recibirListaParticipantes',function(lista){
+			console.log(lista);
+			cw.mostrarParticipantes(lista);
+		});
+		this.socket.on('echarVotacion', function(lista){
+			console.log(lista);
+			cw.mostrarModalVotacion(lista);
+		});
 		this.socket.on('votacion',function(lista){
 			console.log(lista);
-			if(fase=="votacion"){
+			/*if(fase=="votacion"){
 				$('#avisarVotacion').modal("show");
-			}
+			}*/
 		});
-		this.socket.on('comprobarFinalVotacion',function(data){
+		this.socket.on('finalVotacion',function(data){
 			console.log(data);
 			$('#modalGeneral').modal('toggle');
-			cw.mostrarModalSimple("La votacion ha acabado Elegido:"+data.elegido+"En la Fase:"+data.fase);
+			if(data.finalPartida){
+				console.log("estas en el final de la partida");
+			}else{
+				cw.mostrarModalSimple("La votacion ha acabado Elegido:"+data.elegido+"En la Fase:"+data.fase);
+			}
+			
 		});
 		this.socket.on('haVotado',function(data){
 			console.log(data);
@@ -127,7 +152,7 @@ function ClienteWS(){
 			console.log(data);
 			cli.impostor=data.impostor;
 			cli.encargo= data.encargo;
-			if(cli.impostor){
+			if(data.impostor){
 				//$('#avisarImpostor').modal("show");
 				cw.mostrarModalSimple('ERES EL IMPOSTOR A POR ELLOSSS!');
 				//crearColision();
@@ -141,13 +166,11 @@ function ClienteWS(){
 			console.log('muere '+inocente);
 			if(cli.nick==inocente){
 				cli.estado="muerto";
+				$('#pie').append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
 			}
 			dibujarInocenteMuerto(inocente);
 		});
-		this.socket.on('recibirListaParticipantes',function(lista){
-			console.log(lista);
-			cw.mostrarParticipantes(lista);
-		});
+		
 		this.socket.on('dibujarRemoto',function(lista){
 			console.log(lista);
 			for(var i=0;i<lista.length;i++){
@@ -158,15 +181,34 @@ function ClienteWS(){
 			crearColision();
 		});
 		this.socket.on('moverRemoto',function(data){
-			mover(data);
+			if(cli.estado == "vivo" && data.estado == "muerto") {
+             
+            }
+            else {
+                mover(data);
+            }
 		});
 		this.socket.on('tareaRealizada',function(data){
 			console.log(data);
+			if(data.estadoTarea == "completada"){
+				tareasOn= false;
+			}
+				else{
+					tareasOn=true;
+				}
 
 		});
 		this.socket.on("hasAtacado",function(fase){
 			if(fase=="jugando"){
+				console.log(fase);
 				ataquesOn=true;
+			}
+		});
+		this.socket.on("jugadorAbandonaPartida", function(datos){
+			if(cli.nick == datos.nick){
+				cw.inicio();
+			}else{
+				jugadorAbandonaPartida(datos.nick);
 			}
 		});
 	
