@@ -57,6 +57,11 @@
   var followTextRemotoMuerto;
   var ataquesOn=true;
   var final=false;
+  var musica;
+  var volverJugar;
+  var progresoGlobalInfo;
+  var progresoLocalInfo;
+
 
   function preload(){
    // this.load.image("tiles", "cliente/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -70,13 +75,18 @@
     this.load.spritesheet("varios","cliente/assets/images/plantillaPersonajes.png",{frameWidth:32,frameHeight:32});
     this.load.spritesheet("muertos","cliente/assets/images/Plantillamuertos.png",{frameWidth:32,frameHeight:40}); 
     //this.load.spritesheet("jardines", "cliente/assets/tileset/jardinesOK.png",{frameWidth:34,frameHeight:32});
+  
+    this.load.audio('musicafondo', ['cliente/musica/musicajuego.mp3']);
+
+
+
   }
 
   function create(){
       crear=this;
       map = crear.make.tilemap({key:"map"});
       //--------------------------------- PARA MI MAPA------------------------------------------
-          const tileset = map.addTilesetImage("open_tileset", "tiles");
+           const tileset = map.addTilesetImage("open_tileset", "tiles");
 
 
              
@@ -523,12 +533,13 @@
             cursors = crear.input.keyboard.createCursorKeys();
             remotos=crear.add.group();
             muertos = crear.add.group();
-            //jardines= crear.add.group();
             teclaA=crear.input.keyboard.addKey('a');
             teclaV=crear.input.keyboard.addKey('v');
             teclaT=crear.input.keyboard.addKey('t');
             lanzarJugador(ws.nick,ws.numJugador,ws.numJugador);
             ws.estoyDentro();
+            musica= this.sound.add("musicafondo", {loop: true});
+            musica.play();
 
   }
 
@@ -538,15 +549,21 @@
     if(ws.encargo==objeto.properties.tareas && teclaT.isDown){
      tareasOn=false;
       console.log("realizar tarea " +ws.encargo);
-     ws.realizarTarea();//o hacer la llamada dentro del control web
-     //mirar esto si esta bien 
-     /*
-     var tareas=crear.physics.add.sprite(x,y,"jardines", recursos[numJugador].frame);
-      jardines.add(jardines);
-      crear.physics.add.overlap(player,jardines,tareas);*/
+      ws.realizarTarea();//o hacer la llamada dentro del control web
       cw.mostrarModalTarea(ws.encargo);
+      tareasOn=true;
     }
   }
+
+  function actualizarTareas(percentGlobal, percentLocal){
+    if(!ws.impostor){
+      progresoGlobalInfo.setText("Progreso Global"+ percentGlobal +"%");
+      progresoLocalInfo.setText("Progreso Local"+ percentLocal +"%");
+    }
+
+  }
+
+
 
   function lanzarJugador(nick,numJugador){
     var x=spawnPoint.x+numJugador*32+2;
@@ -607,7 +624,15 @@
       var muerto=crear.physics.add.sprite(x,y,"muertos", recursos[numJugador].frameMuerto);
       muertos.add(muerto);
       crear.physics.add.overlap(player,muertos,votacion);
+      //
+      jugadores[inocente].visible=false;
     }
+
+     /////
+     function visibleTrue(inocente) {
+        jugadores[inocente].visible = true;
+      }
+
 
     function votacion(sprite, muerto){
       if(teclaV.isDown){
@@ -627,6 +652,10 @@
     var numJugador=datos.numJugador;
     var x= datos.x;
     var y= datos.y;
+
+    if(jugadores[nick]) {
+      jugadores[nick].visible = true;
+    }
     var remoto=jugadores[nick];
     const speed = 175;
 
@@ -699,7 +728,8 @@
   function finPartida(data){
     final=true;
     //remoto=undefined;
-    cw.mostrarModalSimple("Fin de la Partida"+data);
+    cw.mostrarModalFinal("Fin de la Partida -- Ganan:" +data);
+    musica.stop();
   }
 
   
@@ -713,53 +743,53 @@
 
   function update(time, delta) {
 
-     const speed = 175;
-  //const prevVelocity = player.body.velocity.clone();
-    var direccion= "stop";
-  const nombre=recursos[ws.numJugador].sprite;
-  if(!final){
-  // Stop any previous movement from the last frame
-  player.body.setVelocity(0);
-  //player2.body.setVelocity(0);
+      const speed = 175;
+      //const prevVelocity = player.body.velocity.clone();
+        var direccion= "stop";
+      const nombre=recursos[ws.numJugador].sprite;
+      if(!final){
+      // Stop any previous movement from the last frame
+      player.body.setVelocity(0);
+      //player2.body.setVelocity(0);
 
 
 
-  // Horizontal movement
-  if (cursors.left.isDown) {
-    player.body.setVelocityX(-speed);
-    direccion="left";
-  } else if (cursors.right.isDown) {
-    player.body.setVelocityX(speed);
-   direccion="right";
-  }
+      // Horizontal movement
+      if (cursors.left.isDown) {
+        player.body.setVelocityX(-speed);
+        direccion="left";
+      } else if (cursors.right.isDown) {
+        player.body.setVelocityX(speed);
+       direccion="right";
+      }
 
-  // Vertical movement
-  if (cursors.up.isDown) {
-    player.body.setVelocityY(-speed);
-    direccion="up";
-  } else if (cursors.down.isDown) {
-    player.body.setVelocityY(speed);
-    direccion="down";
-  }
+      // Vertical movement
+      if (cursors.up.isDown) {
+        player.body.setVelocityY(-speed);
+        direccion="up";
+      } else if (cursors.down.isDown) {
+        player.body.setVelocityY(speed);
+        direccion="down";
+      }
 
-  // Normalize and scale the velocity so that player can't move faster along a diagonal
-  player.body.velocity.normalize().scale(speed);
-  ws.movimiento(direccion,player.body.x,player.body.y);
-  // Update the animation last and give left/right animations precedence over up/down animations
-  if (cursors.left.isDown) {
-    player.anims.play(nombre+"-left-walk", true);
-  } else if (cursors.right.isDown) {
-    player.anims.play(nombre+"-right-walk", true);
-  } else if (cursors.up.isDown) {
-    player.anims.play(nombre+"-back-walk", true);
-  } else if (cursors.down.isDown) {
-    player.anims.play(nombre+"-front-walk", true);
-  } else {
-    player.anims.stop();
+      // Normalize and scale the velocity so that player can't move faster along a diagonal
+      player.body.velocity.normalize().scale(speed);
+      ws.movimiento(direccion,player.body.x,player.body.y);
+      // Update the animation last and give left/right animations precedence over up/down animations
+      if (cursors.left.isDown) {
+        player.anims.play(nombre+"-left-walk", true);
+      } else if (cursors.right.isDown) {
+        player.anims.play(nombre+"-right-walk", true);
+      } else if (cursors.up.isDown) {
+        player.anims.play(nombre+"-back-walk", true);
+      } else if (cursors.down.isDown) {
+        player.anims.play(nombre+"-front-walk", true);
+      } else {
+        player.anims.stop();
 
-  // Normalize and scale the velocity so that player can't move faster along a diagonal
-  player.body.velocity.normalize().scale(speed);
-  }
+      // Normalize and scale the velocity so that player can't move faster along a diagonal
+      player.body.velocity.normalize().scale(speed);
+      }
   }
 
 

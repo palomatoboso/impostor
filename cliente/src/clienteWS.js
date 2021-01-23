@@ -7,6 +7,8 @@ function ClienteWS(){
 	this.impostor;
 	this.estado;
 	this.encargo;
+	this.percentGlobal;
+	this.percentLocal;
 
 	this.ini=function(){
 		this.socket=io.connect();
@@ -47,7 +49,7 @@ function ClienteWS(){
 		this.socket.emit("obtenerEncargo",this.codigo,this.nick,this.encargo);
 	}
 	this.atacar=function(atacado){
-		this.socket.emit("atacar",this.codigo,this.nick,atacado);
+		this.socket.emit("atacar",this.codigo, this.nick, atacado);
 	}
 	this.movimiento=function(direccion,x,y){
 		var datos = {nick:this.nick, codigo:this.codigo, numJugador:this.numJugador, estado:this.estado, direccion:direccion, x:x, y:y};
@@ -99,17 +101,17 @@ function ClienteWS(){
 			}
 		});
 		this.socket.on('nuevoJugador',function(nick){
-			console.log(nick+"se une a la partida");
+			console.log(nick+" se une a la partida");
 			cw.actualizarJugadores();
 		});
 		this.socket.on('esperando',function(fase){
 			console.log("esperando: "+fase);
 		});
 		this.socket.on('partidaIniciada',function(fase){
-			cli.obtenerEncargo();
 			console.log("Partida esta en fase:"+fase); 
 			lanzarJuego();
 			cw.limpiarLog();
+			cli.obtenerEncargo();
 			
 		});
 		this.socket.on('recibirListaPartidasDisponibles',function(lista){
@@ -134,6 +136,7 @@ function ClienteWS(){
 			/*if(fase=="votacion"){
 				$('#avisarVotacion').modal("show");
 			}*/
+			//cw.mostrarModalVotacion(lista);
 		});
 		this.socket.on('finalVotacion',function(data){
 			console.log(data);
@@ -141,7 +144,7 @@ function ClienteWS(){
 			if(data.finalPartida){
 				console.log("estas en el final de la partida");
 			}else{
-				cw.mostrarModalSimple("La votacion ha acabado Elegido:"+data.elegido+"En la Fase:"+data.fase);
+				cw.mostrarModalSimple("La votacion ha acabado Elegido: "+data.elegido+" En la Fase:"+data.fase);
 			}
 			
 		});
@@ -152,7 +155,7 @@ function ClienteWS(){
 			console.log(data);
 			cli.impostor=data.impostor;
 			cli.encargo= data.encargo;
-			if(data.impostor){
+			if(cli.impostor){
 				//$('#avisarImpostor').modal("show");
 				cw.mostrarModalSimple('ERES EL IMPOSTOR A POR ELLOSSS!');
 				//crearColision();
@@ -166,7 +169,6 @@ function ClienteWS(){
 			console.log('muere '+inocente);
 			if(cli.nick==inocente){
 				cli.estado="muerto";
-				$('#pie').append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
 			}
 			dibujarInocenteMuerto(inocente);
 		});
@@ -190,6 +192,9 @@ function ClienteWS(){
 		});
 		this.socket.on('tareaRealizada',function(data){
 			console.log(data);
+			cli.percentGlobal= datos.percentGlobal;
+			cli.percentLocal=datos.percentLocal;
+			actualizarTareas(datos.percentGlobal, datos.percentLocal);
 			if(data.estadoTarea == "completada"){
 				tareasOn= false;
 			}
@@ -205,11 +210,12 @@ function ClienteWS(){
 			}
 		});
 		this.socket.on("jugadorAbandonaPartida", function(datos){
-			if(cli.nick == datos.nick){
+			/*if(cli.nick == datos.nick){
 				cw.inicio();
 			}else{
 				jugadorAbandonaPartida(datos.nick);
-			}
+			}*/
+			console.log(datos);
 		});
 	
 		

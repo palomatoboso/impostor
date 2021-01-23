@@ -166,12 +166,12 @@ function ServidorWS(){
 						var resul= juego.abandonarPartida(codigo, nick);
 						//var finalPartida = resul.finalPartida;
 						//var datos={finalPartida:resul.finalPartida, nick:nick};
-						var fase = juego.partidas[codigo].fase.nombre;
+						var fase = partida.fase.nombre;
 						cli.enviarATodos(io, codigo, "jugadorAbandonaPartida");
 
 						if(fase=="final"){
 							var jM= "El jugador" + nick + "abandona la partida";
-							cli.enviarATodos(io, codigo, "final");
+							cli.enviarATodos(io, codigo, "final",jM);
 							juego.eliminarPartida(codigo);
 
 							var lista=juego.listarPartidasDisponibles();
@@ -179,7 +179,7 @@ function ServidorWS(){
 
 						}
 						else {
-								socket.join(codigo);
+								socket.leave(codigo);
 						}
 
 					}
@@ -206,7 +206,7 @@ function ServidorWS(){
 					//cli.enviarRemitente(socket, "tareaRealizada", {"percent": percent, "global": global, "estadoTarea":estadoTarea});
 
 					if (partida.fase.nombre == "final"){
-						var data={"Fase":partida.fase.nombre,"Ganadores":partida.fase.ganadores};
+						var data={"Fase ":partida.fase.nombre," Los Ganadores ":partida.fase.ganadores};
 						cli.enviarATodos(io,codigo,"final",data);
 					}
 					//porcentaje 

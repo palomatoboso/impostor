@@ -182,7 +182,6 @@ function ControlWeb($){
         var cadena = '<div id = "mostrarAbandonarPartida">';
         cadena = cadena + '<button type="button" class="btn btn-success" id="btnAbandonar">Abandonar Partida</button>';
         cadena = cadena + '</div>';
-
         $('#abandonarPartida').append(cadena);
 
         $('#btnAbandonar').on('click', function() {
@@ -206,9 +205,23 @@ function ControlWeb($){
 			
 			$('#mostrarListaEsperando').remove();
 	}
+
+	this.mostrarModalFinal = function(mensaje){
+        this.limpiarModal();
+        var cadena='<div id="final"><h2>' + mensaje + '</h2>';
+        $("#contenidoModal").append(cadena);
+        $("#pie").append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Close</button>');
+       	$('#modalGeneral').modal("show");
+        
+        
+        $('#cerrar').click(function() {
+            cw.inicio();
+        });
+    }
+
 	this.mostrarModalSimple=function(msg){
 		this.limpiarModal();
-		$('#avisarImpostor').remove();
+		//$('#avisarImpostor').remove();
 		var cadena="<p id='avisarImpostor'>"+msg+'</p>';
 		$("#contenidoModal").append(cadena);
 		$("#pie").append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
@@ -217,21 +230,18 @@ function ControlWeb($){
 
 	this.mostrarModalTarea=function(tarea){
 		this.limpiarModal();
-		$('#avisarImpostor').remove();
-		//poner gif animado 
-		//cadena=cadena+"<img src='cliente/img/avisarimpostor.gif' class='img-responsive center-block'>";
-		//$('#tarea').remove();
-		var cadena="<p id='tarea'>"+tarea+'</p>';
+		var cadena='<div  id="tarea"><h2>'+tarea+'</h2>';
 		$("#contenidoModal").append(cadena);
 		$("#pie").append('<button type="button" id="cerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
 		$('#modalGeneral').modal("show");
 
 	}
+
 	this.mostrarModalVotacion=function(lista){
 		this.limpiarModal();
 		var cadena='<div id="votacion"><h3>Votación</h3>';		
 		cadena =cadena+'<div class="input-group">';
-	  	 for(var i=0;i<lista.length;i++){
+	  	for(var i=0;i<lista.length;i++){
 	  		cadena=cadena+'<div><input type="radio" name="optradio" value="'+lista[i].nick+'"> '+lista[i].nick+'</div>';
 	  	}
 	  	cadena=cadena+'<div><input type="radio" name="optradio" value="-1"> Saltar voto</div>';
@@ -247,7 +257,7 @@ function ControlWeb($){
 		});
 		
 		$('#votar').click(function(){
-	    	if (sospechoso!="-1"){
+	    	if (sospechoso!=-1){
 		    	ws.votar(sospechoso);
 		    }
 		    else{
@@ -263,6 +273,7 @@ function ControlWeb($){
 		$('#cerrar').remove();
 		$("#votacion").remove();
 		$("#votar").remove();
+		$("#abandonarPartida").remove();
 	}
 
 }
